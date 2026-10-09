@@ -1,0 +1,16 @@
+{
+  "fps": 30,
+  "durationS": 60,
+  "introOut": [3.6, 4.3],
+  "ghostLine": [4.0, 5.2],
+  "ghostNodeStart": 4.25,
+  "ghostNodeStagger": 0.12,
+  "zoomIn": [6.3, 7.6],
+  "firstArrival": 7.6,
+  "stepPeriod": 5.2,
+  "travel": 1.3,
+  "zoomOut": [43.6, 45.6],
+  "recap": [45.8, 48.4],
+  "message": [49.2, 50.0],
+  "settleEnd": 58
+}

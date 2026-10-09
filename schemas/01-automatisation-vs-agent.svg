@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="1200" height="680" font-family="Poppins, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+<title id="t">Automatisation versus agent IA</title>
+<desc id="d">Comparaison côte à côte : une automatisation suit un chemin linéaire déclencheur, action, fin ; un agent tourne en boucle observer, décider, agir, vérifier jusqu'à atteindre son objectif.</desc>
+<defs><marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#4E4EEA"/></marker><marker id="a-yel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#E0AA00"/></marker><marker id="a-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#1C1C2E"/></marker><marker id="a-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#7A7A8C"/></marker><marker id="a-coral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#E5484D"/></marker><marker id="a-deep" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#2F2FB5"/></marker></defs>
+<rect width="1200" height="680" fill="#FBFBF8"/>
+<rect x="40" y="28" width="77.39999999999999" height="26" rx="13.0" fill="#1C1C2E" stroke="none" stroke-width="0" />
+<text x="78.69999999999999" y="45.2" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle" >M2 / M5</text>
+<text x="40" y="88.0" font-size="28" font-weight="700" fill="#1C1C2E" text-anchor="start" >Automatisation vs agent IA</text>
+<text x="40" y="114.0" font-size="14" font-weight="400" fill="#7A7A8C" text-anchor="start" >Une automatisation exécute. Un agent décide.</text>
+<rect x="40" y="140" width="540" height="500" rx="20" fill="#FFFFFF" stroke="#DADAE3" stroke-width="1.5" />
+<rect x="620" y="140" width="540" height="500" rx="20" fill="#FFFFFF" stroke="#DADAE3" stroke-width="1.5" />
+<circle cx="600" cy="390" r="22" fill="#1C1C2E" stroke="#FBFBF8" stroke-width="4"/>
+<text x="600" y="395.0" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle" >VS</text>
+<circle cx="70" cy="175" r="8" fill="#F9C623" stroke="none" stroke-width="1.5"/>
+<text x="88" y="181.0" font-size="17" font-weight="700" fill="#1C1C2E" text-anchor="start" >AUTOMATISATION</text>
+<text x="70" y="206.0" font-size="12.5" font-weight="400" fill="#7A7A8C" text-anchor="start" >Un déclencheur, une action : le chemin est écrit d'avance</text>
+<rect x="68" y="355" width="124" height="60" rx="30" fill="#F9C623" stroke="#E0AA00" stroke-width="2" />
+<text x="130" y="391.0" font-size="15" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Déclencheur</text>
+<text x="130" y="438.0" font-size="11.5" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Un événement</text>
+<rect x="243" y="355" width="124" height="60" rx="30" fill="#FFFFFF" stroke="#E0AA00" stroke-width="2" />
+<text x="305" y="391.0" font-size="15" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Action</text>
+<text x="305" y="438.0" font-size="11.5" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Une règle appliquée</text>
+<rect x="418" y="355" width="124" height="60" rx="30" fill="#FFFFFF" stroke="#E0AA00" stroke-width="2" />
+<text x="480" y="391.0" font-size="15" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Fin</text>
+<text x="480" y="438.0" font-size="11.5" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Même résultat</text>
+<path d="M194 385 L241 385" fill="none" stroke="#E0AA00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-yel)"/>
+<path d="M369 385 L416 385" fill="none" stroke="#E0AA00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-yel)"/>
+<path d="M130 343 C130 300 480 300 480 343" fill="none" stroke="#DADAE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6" marker-end="url(#a-muted)"/>
+<text x="305" y="312.0" font-size="12" font-weight="500" fill="#7A7A8C" text-anchor="middle" >toujours le même chemin</text>
+<rect x="62" y="585" width="150" height="32" rx="16.0" fill="#FEF4CF" stroke="none" stroke-width="0" />
+<text x="137.0" y="605.2" font-size="12" font-weight="600" fill="#7A5A00" text-anchor="middle" >Règles fixes</text>
+<rect x="226" y="585" width="150" height="32" rx="16.0" fill="#FEF4CF" stroke="none" stroke-width="0" />
+<text x="301.0" y="605.2" font-size="12" font-weight="600" fill="#7A5A00" text-anchor="middle" >Zéro décision</text>
+<rect x="390" y="585" width="150" height="32" rx="16.0" fill="#FEF4CF" stroke="none" stroke-width="0" />
+<text x="465.0" y="605.2" font-size="12" font-weight="600" fill="#7A5A00" text-anchor="middle" >Prévisible</text>
+<circle cx="650" cy="175" r="8" fill="#4E4EEA" stroke="none" stroke-width="1.5"/>
+<text x="668" y="181.0" font-size="17" font-weight="700" fill="#1C1C2E" text-anchor="start" >AGENT IA</text>
+<text x="650" y="206.0" font-size="12.5" font-weight="400" fill="#7A7A8C" text-anchor="start" >Une boucle qui s'adapte jusqu'à atteindre l'objectif</text>
+<path d="M941.7 292.9 A128 128 0 0 1 1007.1 358.3" fill="none" stroke="#4E4EEA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M1007.1 461.7 A128 128 0 0 1 941.7 527.1" fill="none" stroke="#4E4EEA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M838.3 527.1 A128 128 0 0 1 772.9 461.7" fill="none" stroke="#4E4EEA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<path d="M772.9 358.3 A128 128 0 0 1 838.3 292.9" fill="none" stroke="#4E4EEA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<circle cx="890.0" cy="282.0" r="37" fill="#4E4EEA" stroke="#4E4EEA" stroke-width="2"/>
+<text x="890.0" y="287.0" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" >Observer</text>
+<circle cx="1018.0" cy="410.0" r="37" fill="#4E4EEA" stroke="#4E4EEA" stroke-width="2"/>
+<text x="1018.0" y="415.0" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" >Décider</text>
+<circle cx="890.0" cy="538.0" r="37" fill="#4E4EEA" stroke="#4E4EEA" stroke-width="2"/>
+<text x="890.0" y="543.0" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" >Agir</text>
+<circle cx="762.0" cy="410.0" r="37" fill="#F9C623" stroke="#E0AA00" stroke-width="2"/>
+<text x="762.0" y="415.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Vérifier</text>
+<text x="890" y="406.0" font-size="15" font-weight="700" fill="#4E4EEA" text-anchor="middle" >Objectif</text>
+<text x="890" y="426.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="middle" >atteint ?</text>
+<path d="M810 442 C840 488 940 488 970 442" fill="none" stroke="#E5484D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 5" marker-end="url(#a-coral)"/>
+<text x="890" y="496.0" font-size="11" font-weight="500" fill="#E5484D" text-anchor="middle" >échec : retour à Décider</text>
+<rect x="642" y="585" width="150" height="32" rx="16.0" fill="#ECECFD" stroke="none" stroke-width="0" />
+<text x="717.0" y="605.2" font-size="12" font-weight="600" fill="#4E4EEA" text-anchor="middle" >S'adapte</text>
+<rect x="806" y="585" width="150" height="32" rx="16.0" fill="#ECECFD" stroke="none" stroke-width="0" />
+<text x="881.0" y="605.2" font-size="12" font-weight="600" fill="#4E4EEA" text-anchor="middle" >Se corrige</text>
+<rect x="970" y="585" width="150" height="32" rx="16.0" fill="#ECECFD" stroke="none" stroke-width="0" />
+<text x="1045.0" y="605.2" font-size="12" font-weight="600" fill="#4E4EEA" text-anchor="middle" >Vise un objectif</text>
+</svg>

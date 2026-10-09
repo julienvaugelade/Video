@@ -2,10 +2,12 @@
   "name": "automatisation-vs-agent",
   "version": "1.0.0",
   "private": true,
-  "description": "Vidéo motion graphics (45 s) : automatisation classique vs agent IA",
+  "description": "Vidéos motion graphics de formation (Remotion)",
   "scripts": {
     "studio": "remotion studio",
+    "audio": "python3 scripts/parcours_audio.py",
     "render": "remotion render AutomationVsAgent out/automatisation-vs-agent.mp4",
+    "render:parcours": "remotion render ParcoursRS6601 out/parcours-rs6601.mp4",
     "still": "remotion still AutomationVsAgent out/still.png"
   },
   "dependencies": {

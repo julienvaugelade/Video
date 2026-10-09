@@ -25,3 +25,12 @@ npm run render   # rendu MP4 dans out/
 ```
 
 Toute la chronologie est dans `src/AutomationVsAgent.tsx` (temps exprimés en secondes).
+
+## Simulateur de boucle d'agent
+
+Outil pédagogique interactif (un seul fichier, sans installation) : ouvrir [`simulateur/index.html`](simulateur/index.html) dans un navigateur.
+
+L'apprenant configure une demande (« répondre à un client mécontent », situation, humeur, menace, outils, nombre de tours), puis avance pas à pas :
+- **Agent** : boucle observer → décider → agir, avec ce que l'agent « voit » et « décide » à chaque tour ;
+- **Automatisation** : chemin fixe en 3 étapes, sans décision, pour comparer ;
+- **Garde-fous** injectables en cours de route : plafond de remboursement, validation humaine avant envoi, arrêt d'urgence (plus le budget de tours).

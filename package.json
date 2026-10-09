@@ -6,7 +6,9 @@
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render AutomationVsAgent out/automatisation-vs-agent.mp4",
-    "still": "remotion still AutomationVsAgent out/still.png"
+    "still": "remotion still AutomationVsAgent out/still.png",
+    "render:n8n": "remotion render N8nScenario out/n8n-scenario-bloc-par-bloc.mp4",
+    "sfx": "python3 scripts/generate_sfx.py"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",

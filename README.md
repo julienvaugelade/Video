@@ -25,3 +25,27 @@ npm run render   # rendu MP4 dans out/
 ```
 
 Toute la chronologie est dans `src/AutomationVsAgent.tsx` (temps exprimés en secondes).
+
+---
+
+# Les garde-fous d'un agent IA — motion graphics (40 s)
+
+Vidéo 1920×1080, 30 i/s, sans voix off ni personnage : uniquement des formes géométriques et du texte.
+
+- Style schematic : fond blanc `#FFFFFF`, traits fins `#2B3346`, accents jaunes `#F9C623` réservés aux portes, typographie Poppins.
+- Rendu final : [`rendu/garde-fous-agent-ia.mp4`](rendu/garde-fous-agent-ia.mp4)
+- Source : `src/GardeFousAgent.tsx` (composition `GardeFousAgent`, temps exprimés en secondes).
+
+| Temps | Contenu |
+|---|---|
+| 0–3,7 s | Titre « Les garde-fous d'un agent IA » (IA : intelligence artificielle) |
+| 3,8–6,6 s | Le schéma se trace : agent, rail, trois portes, nœud « Action » |
+| 6,6–21 s | Demande 1 « Rembourser une commande — 120 € » : budget (120 € / plafond 500 €) ✓, accord d'un responsable ✓, données « Commandes » dans le périmètre ✓ → chaque porte s'ouvre puis se referme, remboursement effectué |
+| 21–29,6 s | Demande 2 « Analyser les salaires pour un rapport interne » : budget ✓, validation ✓, la porte 3 commence à s'ouvrir… |
+| 29,6–34,8 s | … les salaires sont hors périmètre : la porte claque, l'action rebondit, « Aucune action exécutée » + bandeau « Refus justifié » (motif journalisé, demande transmise à un responsable) |
+| 34,8–37,4 s | Conclusion « Un agent fiable sait aussi s'arrêter. » et rappel des trois portes |
+| 37,4–40 s | Arrêt sur image |
+
+```bash
+npm run render:garde-fous
+```

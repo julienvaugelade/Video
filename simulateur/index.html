@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulateur de boucle d'agent</title>
+<meta name="description" content="Voyez la différence entre une automatisation et un agent IA : la boucle observer, décider, agir, étape par étape, et l'effet d'un garde-fou.">
+<style>
+@font-face{font-family:Poppins;font-weight:400;src:url(../public/fonts/poppins-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Poppins;font-weight:500;src:url(../public/fonts/poppins-latin-500-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Poppins;font-weight:600;src:url(../public/fonts/poppins-latin-600-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Poppins;font-weight:700;src:url(../public/fonts/poppins-latin-700-normal.woff2) format("woff2");font-display:swap}
+:root{
+  --bg:#FBFBF8;--card:#fff;--ink:#1C1C2E;--muted:#6B6B7E;--line:#DADAE3;
+  --blue:#4E4EEA;--blue-soft:#ECECFD;--yellow:#F9C623;--yellow-soft:#FEF4D2;
+  --red:#C93A32;--red-soft:#FCE9E7;--green:#177D57;--green-soft:#E3F4EC;
+  --mode:var(--blue);--mode-soft:var(--blue-soft);
+}
+body[data-mode="auto"]{--mode:var(--yellow);--mode-soft:var(--yellow-soft)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Poppins,system-ui,sans-serif}
+h1,h2,h3{margin:0;line-height:1.25}
+button,select,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 64px}
+header p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+h1{font-size:clamp(24px,4vw,34px);font-weight:700}
+h1 span{color:var(--blue)}
+.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;margin-top:24px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card h2{font-size:16px;font-weight:600;margin-bottom:12px}
+label,.lbl{display:block;font-size:13px;font-weight:500;color:var(--muted);margin:12px 0 4px}
+select,textarea,input[type=text]{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+textarea{resize:vertical;min-height:62px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#F0F0F5;padding:4px;border-radius:12px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{margin:0;text-align:center;padding:8px 6px;border-radius:9px;cursor:pointer;color:var(--ink);font-weight:600;font-size:13px}
+.seg input:checked+label{background:#fff;box-shadow:0 1px 4px rgba(28,28,46,.15)}
+.seg input[value=agent]:checked+label{color:var(--blue)}
+.seg input:focus-visible+label{outline:3px solid var(--blue)}
+.check{display:flex;gap:9px;align-items:flex-start;margin:7px 0;font-size:14px;color:var(--ink);font-weight:400}
+.check input{margin-top:4px;accent-color:var(--blue)}
+.check small{display:block;color:var(--muted);font-size:12px}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+/* stage */
+.stage-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.chip{display:inline-flex;gap:6px;align-items:center;padding:3px 11px;border-radius:99px;font-size:13px;font-weight:600;background:#F0F0F5;color:var(--muted)}
+.chip.run{background:var(--blue-soft);color:var(--blue)}
+body[data-mode="auto"] .chip.run{background:var(--yellow-soft);color:#7A5A00}
+.chip.halt{background:var(--red-soft);color:var(--red)}
+.chip.done{background:var(--green-soft);color:var(--green)}
+.diagram{width:100%;height:auto;margin:10px 0 2px;display:block}
+.node rect{fill:#fff;stroke:var(--line);stroke-width:2;transition:all .25s}
+.node text{font:600 15px Poppins,system-ui,sans-serif;fill:var(--muted);text-anchor:middle}
+.node .num{font-size:12px;font-weight:500}
+.node.active rect{fill:var(--mode);stroke:var(--mode)}
+.node.active text{fill:#fff}
+body[data-mode="auto"] .node.active text{fill:var(--ink)}
+.node.done rect{stroke:var(--mode);fill:var(--mode-soft)}
+.node.done text{fill:var(--ink)}
+.node.stopped rect{stroke:var(--red);fill:var(--red-soft)}
+.arrow{stroke:var(--line);stroke-width:2.5;fill:none;transition:stroke .25s}
+.arrow.on{stroke:var(--mode)}
+.arrowhead{fill:var(--line)}
+.diagram .cap{font:500 12px Poppins,system-ui,sans-serif;fill:var(--muted);text-anchor:middle}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer}
+.btn:hover:not(:disabled){border-color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+body[data-mode="auto"] .btn.primary{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.btn.guard{border-color:var(--red);color:var(--red)}
+.btn.guard[aria-expanded=true]{background:var(--red-soft)}
+.guardmenu{margin:8px 0 0;padding:12px;border:1px solid var(--red);border-radius:12px;background:var(--red-soft)}
+.guardmenu[hidden]{display:none}
+.guardmenu p{margin:0 0 8px;font-size:13px}
+.guardmenu button{display:block;width:100%;text-align:left;margin:6px 0 0;padding:9px 11px;border:1px solid var(--line);background:#fff;border-radius:9px;cursor:pointer}
+.guardmenu button:hover:not(:disabled){border-color:var(--red)}
+.guardmenu button:disabled{opacity:.5;cursor:default}
+.guardmenu b{display:block;font-size:14px}
+.guardmenu span{font-size:12px;color:var(--muted)}
+.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+@media(max-width:760px){.panels{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;min-height:150px;transition:border-color .25s,box-shadow .25s}
+.panel.on{border-color:var(--mode);box-shadow:0 0 0 3px var(--mode-soft)}
+.panel h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:8px}
+.panel.on h3{color:var(--ink)}
+.empty{color:#A4A4B4;font-style:italic;font-size:14px}
+.ctx{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.ctx li{font-size:13px;padding:7px 9px;border-radius:9px;background:#F6F6F9;border-left:3px solid var(--line)}
+.ctx li b{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.ctx li.new{background:var(--mode-soft);border-left-color:var(--mode);animation:pop .4s}
+.ctx li.warn{background:var(--red-soft);border-left-color:var(--red)}
+.say{font-size:14px;animation:pop .4s}
+.act{font-size:14px;animation:pop .4s}
+.act .tool{display:inline-block;font-weight:600;padding:3px 10px;border-radius:8px;background:var(--mode-soft);margin-bottom:6px}
+.act .res{padding:7px 9px;border-radius:9px;background:var(--green-soft);font-size:13px}
+.act .res.ko{background:var(--red-soft)}
+.act .draft{margin-top:6px;font-size:13px;font-style:italic;color:var(--muted)}
+@keyframes pop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.banner{margin-top:14px;padding:14px 16px;border-radius:14px;border:1px solid var(--red);background:var(--red-soft);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.banner b{color:var(--red)}
+.banner p{margin:2px 0 0;font-size:14px}
+.journal h2{margin-top:0}
+.journal ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.jrow{display:grid;grid-template-columns:34px 1fr;gap:10px;font-size:13px}
+.jrow .n{width:30px;height:30px;border-radius:50%;background:var(--mode-soft);display:grid;place-items:center;font-weight:700;font-size:13px}
+.jrow.ev .n{background:var(--red-soft)}
+.jrow dl{margin:0;display:grid;gap:2px}
+.jrow dt{display:inline;font-weight:600}
+.jrow dd{display:inline;margin:0}
+.verdict h2{font-size:18px}
+.verdict .big{font-size:15px;margin:0 0 12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted)}
+td.a{background:var(--blue-soft)}
+td.u{background:var(--yellow-soft)}
+.ok{color:var(--green);font-weight:600}.ko{color:var(--red);font-weight:600}
+.retain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
+@media(max-width:760px){.retain{grid-template-columns:1fr}}
+.retain div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;font-size:14px}
+.retain b{display:block;margin-bottom:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.stack{display:grid;gap:16px}
+</style>
+</head>
+<body data-mode="agent">
+<div class="wrap">
+  <header>
+    <h1>Simulateur de <span>boucle d'agent</span></h1>
+    <p>Donnez la même demande à une automatisation puis à un agent. Avancez pas à pas, regardez ce que chacun « voit » et « décide », puis posez un garde-fou pour voir l'agent s'arrêter. Aucun code à écrire.</p>
+  </header>
+
+  <div class="layout">
+    <!-- CONFIG -->
+    <form class="card" id="config" onsubmit="return false" aria-label="Configuration de la demande">
+      <h2>1. Configurer la demande</h2>
+
+      <span class="lbl" id="modeLbl" style="margin-top:0">Qui traite la demande ?</span>
+      <div class="seg" role="radiogroup" aria-labelledby="modeLbl">
+        <input type="radio" name="mode" id="m-agent" value="agent" checked><label for="m-agent">🔁 Agent</label>
+        <input type="radio" name="mode" id="m-auto" value="auto"><label for="m-auto">⚙️ Automatisation</label>
+      </div>
+
+      <label for="goal">Demande confiée</label>
+      <textarea id="goal">Répondre à un client mécontent</textarea>
+
+      <label for="situation">Ce qui s'est passé</label>
+      <select id="situation">
+        <option value="retard">Colis en retard (89 €)</option>
+        <option value="double">Double facturation (129 €)</option>
+        <option value="defect">Produit défectueux (74 €)</option>
+      </select>
+
+      <label for="anger">Humeur du client</label>
+      <select id="anger">
+        <option value="calm">Mécontent mais calme</option>
+        <option value="annoyed" selected>Agacé</option>
+        <option value="furious">Furieux</option>
+      </select>
+
+      <label class="check" style="margin-top:12px"><input type="checkbox" id="threat"><span>Menace d'un avis public et d'un avocat<small>Un détail que seul quelqu'un qui lit le message remarque.</small></span></label>
+
+      <fieldset id="toolsBox" style="border:0;padding:0;margin:0">
+        <span class="lbl">Outils donnés à l'agent</span>
+        <label class="check"><input type="checkbox" id="t-crm" checked><span>Lire la fiche client (CRM)</span></label>
+        <label class="check"><input type="checkbox" id="t-order" checked><span>Vérifier la commande</span></label>
+        <label class="check"><input type="checkbox" id="t-refund" checked><span>Rembourser</span></label>
+        <label class="check"><input type="checkbox" id="t-escalate" checked><span>Passer la main à un humain</span></label>
+      </fieldset>
+
+      <div id="turnsBox">
+        <label for="maxTurns">Nombre de tours maximum : <b id="maxTurnsVal">8</b></label>
+        <input type="range" id="maxTurns" min="2" max="8" value="8">
+        <div class="hint">Un agent a besoin d'une limite. Descendez à 3 pour voir le budget s'épuiser.</div>
+      </div>
+    </form>
+
+    <!-- STAGE -->
+    <div class="stack">
+      <section class="card" aria-label="Simulation">
+        <div class="stage-head">
+          <h2 style="margin:0">2. Regarder la boucle tourner</h2>
+          <span class="chip" id="status" role="status">Prêt</span>
+        </div>
+
+        <svg class="diagram" id="diagram" viewBox="0 0 640 210" role="img" aria-label="Schéma de la boucle"></svg>
+
+        <div class="controls">
+          <button class="btn primary" id="next" type="button">Étape suivante ▶</button>
+          <button class="btn" id="play" type="button" aria-pressed="false">Lecture auto</button>
+          <button class="btn" id="reset" type="button">↺ Recommencer</button>
+          <button class="btn guard" id="guardBtn" type="button" aria-expanded="false" aria-controls="guardMenu">🛡 Injecter un garde-fou</button>
+        </div>
+
+        <div class="guardmenu" id="guardMenu" hidden>
+          <p><b>Un garde-fou est une règle posée par un humain.</b> Il s'applique à la prochaine action, sans réécrire le passé.</p>
+          <button type="button" data-guard="cap"><b>Plafond de remboursement : 50 €</b><span>Bloque l'action. L'agent doit trouver autre chose.</span></button>
+          <button type="button" data-guard="human"><b>Validation humaine avant tout envoi</b><span>L'agent prépare, un humain décide d'envoyer.</span></button>
+          <button type="button" data-guard="stop"><b>Arrêt d'urgence</b><span>L'agent s'arrête avant sa prochaine étape.</span></button>
+        </div>
+
+        <div id="banner"></div>
+
+        <div class="panels" id="panels" aria-live="polite"></div>
+      </section>
+
+      <section class="card journal" id="journalCard" hidden aria-label="Journal">
+        <h2>Journal de bord</h2>
+        <ol id="journal"></ol>
+      </section>
+
+      <section class="card verdict" id="verdict" hidden aria-label="Bilan"></section>
+    </div>
+  </div>
+
+  <div class="retain">
+    <div><b>⚙️ Automatisation</b>Un chemin écrit d'avance. Elle exécute, vite et de façon prévisible, mais ne lit pas la situation.</div>
+    <div><b>🔁 Agent</b>Il observe, décide, agit, puis recommence jusqu'à l'objectif. Il peut s'adapter, donc se tromper.</div>
+    <div><b>🛡 Garde-fous</b>C'est ce qui permet de lui confier un objectif : des limites, des validations, un bouton d'arrêt.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- Données du scénario ---------- */
+const SCEN={
+  retard:{amount:89,subject:"Toujours pas de colis !",
+    core:"Ma commande n°48213 devait arriver il y a 8 jours et je n'ai toujours rien reçu.",
+    fact:"Commande n°48213 (89 €) : colis bloqué au centre de tri depuis 6 jours, aucune livraison prévue.",
+    explain:"votre colis est resté bloqué au centre de tri de notre transporteur, l'erreur est de notre côté"},
+  double:{amount:129,subject:"Vous m'avez facturé deux fois",
+    core:"J'ai été prélevé deux fois de 129 € pour la même commande n°51877.",
+    fact:"Commande n°51877 : deux prélèvements de 129 € le même jour, le second est une erreur de notre système de paiement.",
+    explain:"un second prélèvement a été émis par erreur par notre système de paiement"},
+  defect:{amount:74,subject:"Produit cassé à l'ouverture",
+    core:"L'enceinte reçue (commande n°50322) ne s'allume pas du tout.",
+    fact:"Commande n°50322 (74 €) : article sous garantie, 3 autres retours pour le même lot ce mois-ci.",
+    explain:"votre enceinte provient d'un lot que nous savons défectueux"}
+};
+const ANGER={calm:{word:"calme",tone:"cordial"},annoyed:{word:"agacé",tone:"empathique"},furious:{word:"très en colère",tone:"très empathique, avec des excuses en premier"}};
+const CRM_TXT="Claire Martin, cliente depuis 4 ans, 12 commandes, jamais de litige.";
+
+function clientMessage(c){
+  const intro={calm:"Bonjour, je suis mécontente. ",annoyed:"Bonjour, je suis vraiment mécontente. ",furious:"C'EST INADMISSIBLE ! Je suis furieuse. "}[c.anger];
+  return intro+SCEN[c.situation].core+(c.threat?" Sans réponse sous 48 h, je publie un avis public et je saisis mon avocat.":"");
+}
+function buildDraft(w,c){
+  const sc=SCEN[c.situation];
+  const open={calm:"Merci pour votre message.",annoyed:"Je comprends votre agacement et je suis désolé de cette situation.",furious:"Vous avez toutes les raisons d'être en colère et je vous présente mes excuses sincères."}[c.anger];
+  const why=w.order?`Après vérification, ${sc.explain}.`:"Je regarde votre dossier avec attention.";
+  let fix;
+  if(w.refund) fix=`Nous vous avons remboursé ${sc.amount} € (visible sous 3 à 5 jours).`+(w.escalated?" Une responsable vous rappelle aussi sous 24 h.":"");
+  else if(w.escalated) fix="Votre dossier est confié à notre responsable SAV, qui vous rappelle sous 24 h.";
+  else fix="Nous revenons vers vous très vite avec une solution.";
+  return `${w.crm?"Bonjour Mme Martin,":"Bonjour,"} ${open} ${why} ${fix}${w.crm?" Merci de votre fidélité depuis 4 ans.":""}`;
+}
+const GENERIC="Bonjour, nous avons bien reçu votre message et nous le traitons dans les meilleurs délais. Cordialement, le service client.";
+
+/* ---------- Plans de l'agent : chaque étape = voir / décider / agir ---------- */
+function agentPlan(S){
+  const w=S.w,c=S.c,t=c.tools,sc=SCEN[c.situation],a=ANGER[c.anger];
+  const base={mode:"agent",see:w.ctx.map(x=>({...x}))};
+  if(t.crm&&!w.crm) return {...base,kind:"crm",
+    decide:"Je ne sais rien de ce client. Avant de répondre, je consulte sa fiche pour savoir à qui je parle.",
+    tool:"Lire la fiche client (CRM)",
+    run(){w.crm=true;w.ctx.push({k:"Fiche client (CRM)",v:CRM_TXT});return {ok:true,text:CRM_TXT}}};
+  if(t.order&&!w.order) return {...base,kind:"order",
+    decide:"Il se plaint, mais a-t-il raison ? Je vérifie la commande avant de promettre quoi que ce soit.",
+    tool:"Vérifier la commande",
+    run(){w.order=true;w.ctx.push({k:"Commande",v:sc.fact});return {ok:true,text:sc.fact}}};
+  if(t.refund&&w.refund==null&&!w.refundBlocked) return {...base,kind:"refund",amount:sc.amount,
+    decide:w.order
+      ?`Le problème est confirmé et il vient de nous. Face à un client ${a.word}, je rembourse tout de suite les ${sc.amount} €.`
+      :`Je n'ai pas pu vérifier la commande. Je me fie au message, c'est risqué, mais le client est ${a.word}. Je rembourse ${sc.amount} €.`,
+    tool:`Rembourser ${sc.amount} €`,
+    run(){w.refund=sc.amount;w.ctx.push({k:"Remboursement",v:`${sc.amount} € remboursés.`});return {ok:true,text:`${sc.amount} € remboursés au client.`}},
+    onBlock(txt){w.refundBlocked=true;w.ctx.push({k:"Garde-fou",v:txt,warn:true})}};
+  if(t.escalate&&!w.escalated&&(c.threat||w.refundBlocked)) {
+    S.adapted++;
+    return {...base,kind:"escalate",
+      decide:w.refundBlocked
+        ?"Je ne peux plus rembourser, et je ne vais pas contourner la règle. Je demande à un humain de valider le geste commercial."
+        :"Le message contient une menace d'avis public et d'avocat. Ce n'est pas à moi de gérer le juridique, je préviens un humain.",
+      tool:"Passer la main à un humain",
+      run(){w.escalated=true;const r="Ticket T-204 transmis à la responsable SAV (réponse sous 24 h).";w.ctx.push({k:"Escalade",v:r});return {ok:true,text:r}}};
+  }
+  if(!w.draft) return {...base,kind:"draft",
+    decide:`Je rédige la réponse avec un ton ${a.tone}. J'y mets ce que je sais :${w.order?" la cause,":""}${w.refund?" le remboursement,":""}${w.escalated?" le rappel par un humain,":""} ${w.crm?"et sa fidélité.":"et rien de plus, faute d'informations."}`,
+    tool:"Rédiger la réponse",
+    run(){w.draft=buildDraft(w,c);w.ctx.push({k:"Brouillon",v:w.draft});return {ok:true,text:"Brouillon prêt.",draft:w.draft}}};
+  if(!w.sent) return {...base,kind:"send",
+    decide:"Le brouillon répond au problème et au ton du client. Je l'envoie.",
+    tool:"Envoyer l'email",
+    run(){w.sent=true;w.ctx.push({k:"Envoi",v:"Email envoyé à Claire Martin."});return {ok:true,text:"✉️ Email envoyé à Claire Martin."}}};
+  const resolved=!!(w.refund||w.escalated);
+  return {...base,kind:"verify",final:true,
+    decide:w.refund?`Le client est informé et remboursé. L'objectif « ${c.goal} » est atteint, je m'arrête.`
+      :w.escalated?`Le client est informé et son dossier est confié à un humain. L'objectif « ${c.goal} » est atteint avec de l'aide.`
+      :`Le client est informé, mais je n'avais pas les outils pour résoudre son problème. Je m'arrête et je le signale.`,
+    tool:"Vérifier l'objectif",
+    run(){return {ok:resolved,text:resolved?"✅ Objectif atteint.":"⚠️ Objectif atteint en partie : problème non résolu.",resolved}}};
+}
+
+/* ---------- Plan de l'automatisation : 3 étapes fixes ---------- */
+function autoPlan(S){
+  const w=S.w,c=S.c,sc=SCEN[c.situation];
+  const steps=[
+    {kind:"trigger",see:[{k:"Objet du mail",v:"« "+sc.subject+" »"},{k:"Corps du message",v:"Non lu : l'automatisation ne regarde que l'objet.",muted:true}],
+      decide:"Rien à décider. La règle « si un mail arrive dans la boîte SAV, lancer le scénario » est écrite d'avance.",
+      tool:"Déclencheur activé",run(){return {ok:true,text:"Scénario lancé."}}},
+    {kind:"template",see:[{k:"Variables disponibles",v:"Aucune. Seul le modèle fixe existe."}],
+      decide:"Rien à décider. C'est toujours le modèle « Excuses standard », quelle que soit la situation.",
+      tool:"Remplir le modèle",run(){w.draft=GENERIC;return {ok:true,text:"Modèle rempli.",draft:GENERIC}}},
+    {kind:"send",final:true,see:[{k:"Modèle",v:GENERIC}],
+      decide:"Rien à décider. Dernière case du chemin : envoyer.",
+      tool:"Envoyer l'email",run(){w.sent=true;return {ok:false,text:"✉️ Email envoyé. Identique pour tous les clients, la menace et le problème sont ignorés.",resolved:false}}}
+  ];
+  return {mode:"auto",...steps[S.turns.length]};
+}
+
+/* ---------- Moteur ---------- */
+let S,timer=null;
+const results={agent:null,auto:null};
+
+function readCfg(){return{
+  mode:document.querySelector("input[name=mode]:checked").value,
+  goal:$("#goal").value.trim()||"Répondre à un client mécontent",
+  situation:$("#situation").value,anger:$("#anger").value,threat:$("#threat").checked,
+  maxTurns:+$("#maxTurns").value,
+  tools:{crm:$("#t-crm").checked,order:$("#t-order").checked,refund:$("#t-refund").checked,escalate:$("#t-escalate").checked}
+}}
+
+function reset(){
+  stopAuto();
+  const c=readCfg();
+  S={c,w:{ctx:[{k:"Message du client",v:clientMessage(c)}]},turns:[],cur:null,phase:-1,events:[],guards:new Set(),halted:null,finished:false,adapted:0,blocks:0,approved:false};
+  document.body.dataset.mode=c.mode;
+  $("#toolsBox").hidden=$("#turnsBox").hidden=c.mode==="auto";
+  $("#guardMenu").hidden=true;$("#guardBtn").setAttribute("aria-expanded","false");
+  render();
+}
+
+function guardFor(st){
+  if(st.kind==="send"&&S.guards.has("human")&&!S.approved)
+    return {halt:true,id:"human",text:"Garde-fou « validation humaine avant envoi » : la réponse est prête, mais personne n'a le droit de l'envoyer sans accord."};
+  if(st.kind==="refund"&&S.guards.has("cap")&&st.amount>50)
+    return {halt:false,id:"cap",text:`⛔ Refusé par le garde-fou : remboursement de ${st.amount} € au-dessus du plafond de 50 €.`};
+  return null;
+}
+
+function next(){
+  if(S.finished||S.halted) return;
+  if(S.guards.has("stop")) return halt("stop","Arrêt d'urgence : un humain a coupé la boucle avant la prochaine étape.");
+  if(S.phase===-1||S.phase===2){
+    const limit=S.c.mode==="agent"?S.c.maxTurns:99;
+    if(S.turns.length>=limit) return halt("budget",`Budget épuisé : ${limit} tours utilisés sans atteindre l'objectif. Sans limite, un agent peut tourner (et coûter) indéfiniment.`);
+    S.cur=S.c.mode==="agent"?agentPlan(S):autoPlan(S);
+    S.cur.n=S.turns.length+1;S.cur.result=null;
+    S.phase=0;
+    if(S.c.mode==="auto"){S.phase=1;return doAct()}
+    return render();
+  }
+  if(S.phase===0){S.phase=1;return render()}
+  doAct();
+}
+
+function doAct(){
+  const st=S.cur,g=guardFor(st);
+  if(g&&g.halt){st.held=true;return halt(g.id,g.text)}
+  let res;
+  if(g){res={ok:false,text:g.text,blocked:true};S.blocks++;st.onBlock(g.text)}
+  else res=st.run();
+  st.result=res;S.phase=2;S.turns.push(st);S.events.push({t:"turn",turn:st});
+  if(st.final) finish(res);
+  render();
+}
+
+function summary(resolved,outcome){
+  return {steps:S.turns.length,decisions:S.c.mode==="agent"?S.turns.length:0,adapted:S.adapted,guards:S.blocks+(S.halted&&S.halted.id!=="budget"?1:0),resolved,outcome};
+}
+function finish(res){
+  S.finished=true;
+  results[S.c.mode]=summary(!!res.resolved,S.c.mode==="agent"
+    ?(res.resolved?"Client informé et problème traité":"Client informé, problème non résolu")
+    :"Mail standard envoyé, problème ignoré");
+  stopAuto();
+}
+function halt(id,text){
+  S.halted={id,text};S.events.push({t:"halt",id,text});
+  results[S.c.mode]=summary(false,id==="human"?"Arrêté avant envoi, en attente d'un humain":id==="budget"?"Budget de tours épuisé":"Arrêté par un humain");
+  stopAuto();render();
+}
+function approve(){
+  if(!S.halted||S.halted.id!=="human") return;
+  S.approved=true;S.halted=null;S.events.push({t:"ok",text:"👤 Un humain valide l'envoi. La boucle repart."});
+  S.phase=1;doAct();
+}
+
+function guardNote(id){
+  const w=S.w,agent=S.c.mode==="agent";
+  if(id==="stop") return "Effet : la boucle s'arrêtera avant la prochaine étape.";
+  if(id==="cap"){
+    if(!agent) return "Sans effet ici : cette automatisation ne rembourse jamais, elle n'en a pas le pouvoir.";
+    if(!S.c.tools.refund) return "Sans effet ici : l'agent n'a pas l'outil de remboursement.";
+    if(w.refund!=null) return "Trop tard pour ce cas : le remboursement est déjà parti. Un garde-fou n'annule pas le passé.";
+    return "Effet : le prochain remboursement supérieur à 50 € sera refusé.";
+  }
+  if(w.sent) return "Trop tard pour ce cas : l'email est déjà parti.";
+  return "Effet : l'envoi attendra l'accord d'un humain.";
+}
+const GNAME={stop:"Arrêt d'urgence",cap:"Plafond de remboursement 50 €",human:"Validation humaine avant envoi"};
+function injectGuard(id){
+  if(S.finished||S.halted||S.guards.has(id)) return;
+  const note=guardNote(id);
+  S.guards.add(id);
+  S.events.push({t:"guard",text:`🛡 Garde-fou injecté : ${GNAME[id]}. ${note}`});
+  render();
+}
+
+/* ---------- Lecture auto ---------- */
+function startAuto(){
+  if(timer) return;
+  $("#play").setAttribute("aria-pressed","true");$("#play").textContent="⏸ Pause";
+  const tick=()=>{ if(S.finished||S.halted){stopAuto();return} next(); timer=setTimeout(tick,1500)};
+  timer=setTimeout(tick,200);
+}
+function stopAuto(){
+  clearTimeout(timer);timer=null;
+  const p=$("#play");p.setAttribute("aria-pressed","false");p.textContent="Lecture auto";
+}
+
+/* ---------- Rendu ---------- */
+function renderDiagram(){
+  const agent=S.c.mode==="agent";
+  const labels=agent?["Observer","Décider","Agir"]:["Déclencheur","Modèle","Envoi"];
+  const xs=[95,320,545];
+  let h='<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker></defs>';
+  [[170,245],[395,470]].forEach((p,i)=>{
+    h+=`<path class="arrow${agent?(S.phase>i?" on":""):(S.turns.length>i+1?" on":"")}" d="M${p[0]},70 L${p[1]},70" marker-end="url(#ah)"/>`;
+  });
+  if(agent){
+    h+=`<path class="arrow${S.phase===2?" on":""}" d="M545,100 C545,160 95,160 95,100" marker-end="url(#ah)"/>`;
+    h+=`<text class="cap" x="320" y="196">${S.finished?"Objectif atteint : la boucle s'arrête":S.halted?"Boucle interrompue":"Tant que l'objectif n'est pas atteint, on recommence"}</text>`;
+  }else{
+    h+=`<text class="cap" x="320" y="196">Chemin fixe : une fois, dans l'ordre, sans retour</text>`;
+  }
+  labels.forEach((l,i)=>{
+    let cls="node";
+    if(agent){
+      if(S.halted&&i===Math.max(S.phase,0)&&S.phase!==2&&S.phase!==-1) cls+=" stopped";
+      else if(S.phase===i&&!S.finished&&!S.halted) cls+=" active";
+      else if(S.phase>i) cls+=" done";
+      else if(S.phase===2) cls+=" done";
+    }else{
+      const doneN=S.turns.length;
+      if(i<doneN) cls+=" done";
+      if(S.halted&&i===doneN) cls+=" stopped";
+    }
+    h+=`<g class="${cls}"><rect x="${xs[i]-75}" y="42" width="150" height="56" rx="14"/><text class="num" x="${xs[i]}" y="62">${agent?i+1:"Étape "+(i+1)}</text><text x="${xs[i]}" y="84">${l}</text></g>`;
+  });
+  $("#diagram").innerHTML=h;
+}
+
+function renderPanels(){
+  const agent=S.c.mode==="agent",cur=S.cur,ph=S.phase;
+  const labels=agent?["👁 Ce qu'il voit","🧠 Ce qu'il décide","⚡ Ce qu'il fait"]:["👁 Ce qu'elle voit","🧠 Ce qu'elle décide","⚡ Ce qu'elle fait"];
+  const empty=t=>`<p class="empty">${t}</p>`;
+  let see=empty("Cliquez sur « Étape suivante »."),dec=empty("…"),act=empty("…");
+  if(cur){
+    const last=cur.see.length-1;
+    see='<ul class="ctx">'+cur.see.map((x,i)=>`<li class="${x.warn?"warn ":""}${agent&&i===last&&i>0&&cur.n>1?"new":""}"><b>${esc(x.k)}</b>${esc(x.v)}</li>`).join("")+"</ul>";
+    if(ph>=1) dec=`<p class="say">${esc(cur.decide)}</p>`;
+    if(cur.result){
+      const r=cur.result;
+      act=`<div class="act"><span class="tool">🔧 ${esc(cur.tool)}</span><div class="res${r.ok?"":" ko"}">${esc(r.text)}</div>${r.draft?`<div class="draft">« ${esc(r.draft)} »</div>`:""}</div>`;
+    }else if(cur.held) act=`<div class="act"><span class="tool">🔧 ${esc(cur.tool)}</span><div class="res ko">⏸ Bloqué avant exécution.</div></div>`;
+    else if(ph===1) act=empty("Prochaine étape : agir.");
+  }
+  const on=[ph===0||(!cur),ph===1&&cur&&!cur.result&&!cur.held,ph===2||(cur&&cur.held)];
+  if(!cur) on[0]=true;
+  if(cur&&ph===2){on[0]=on[1]=false;on[2]=true}
+  if(cur&&ph===0){on[1]=on[2]=false}
+  $("#panels").innerHTML=[see,dec,act].map((b,i)=>`<div class="panel${on[i]?" on":""}"><h3>${labels[i]}</h3>${b}</div>`).join("");
+}
+
+function renderJournal(){
+  const rows=S.events.filter(e=>!(e.t==="turn"&&e.turn===S.cur));
+  $("#journalCard").hidden=rows.length===0;
+  $("#journal").innerHTML=rows.map(e=>{
+    if(e.t==="turn"){const t=e.turn;
+      return `<li class="jrow"><span class="n">${t.n}</span><dl><div><dt>${S.c.mode==="agent"?"Décide :":"Règle :"}</dt> <dd>${esc(t.decide)}</dd></div><div><dt>Fait :</dt> <dd>${esc(t.tool)} → ${esc(t.result.text)}</dd></div></dl></li>`}
+    return `<li class="jrow ev"><span class="n">${e.t==="halt"?"⛔":e.t==="ok"?"👤":"🛡"}</span><dl><div><dd>${esc(e.text)}</dd></div></dl></li>`;
+  }).join("");
+}
+
+function renderBanner(){
+  const el=$("#banner");
+  if(!S.halted){el.innerHTML="";return}
+  const h=S.halted;
+  el.innerHTML=`<div class="banner" role="alert"><div><b>⛔ ${S.c.mode==="agent"?"L'agent s'est arrêté":"L'automatisation s'est arrêtée"}</b><p>${esc(h.text)}</p></div>${h.id==="human"?'<button class="btn primary" id="approve" type="button">👤 Je valide l\'envoi</button>':""}</div>`;
+  const b=$("#approve");if(b)b.onclick=approve;
+}
+
+function renderVerdict(){
+  const el=$("#verdict"),r=results[S.c.mode];
+  if(!(S.finished||S.halted)||!r){el.hidden=true;return}
+  el.hidden=false;
+  const other=S.c.mode==="agent"?"auto":"agent",o=results[other];
+  const yes=v=>v?'<span class="ok">Oui</span>':'<span class="ko">Non</span>';
+  let html=`<h2>Bilan</h2><p class="big">${S.c.mode==="agent"
+    ?"L'agent a pris <b>"+r.decisions+" décisions</b> en s'appuyant sur ce qu'il découvrait à chaque tour."
+    :"L'automatisation a exécuté <b>"+r.steps+" étapes</b> sans prendre aucune décision."} Résultat : <b>${esc(r.outcome)}</b>.</p>`;
+  if(o){
+    const A=results.agent,U=results.auto;
+    html+=`<table><thead><tr><th></th><th>🔁 Agent</th><th>⚙️ Automatisation</th></tr></thead><tbody>
+      <tr><th>Étapes / tours</th><td class="a">${A.steps}</td><td class="u">${U.steps}</td></tr>
+      <tr><th>Décisions prises</th><td class="a">${A.decisions}</td><td class="u">${U.decisions}</td></tr>
+      <tr><th>S'est adapté à une surprise</th><td class="a">${yes(A.adapted>0)}</td><td class="u">${yes(false)}</td></tr>
+      <tr><th>Garde-fous déclenchés</th><td class="a">${A.guards}</td><td class="u">${U.guards}</td></tr>
+      <tr><th>Problème du client résolu</th><td class="a">${yes(A.resolved)}</td><td class="u">${yes(U.resolved)}</td></tr>
+      <tr><th>Résultat</th><td class="a">${esc(A.outcome)}</td><td class="u">${esc(U.outcome)}</td></tr></tbody></table>
+      <p class="hint">Chaque colonne garde le dernier essai de ce mode. Changez la configuration ou posez un garde-fou et relancez pour comparer.</p>`;
+  }else{
+    html+=`<p class="hint">Lancez maintenant le même scénario en mode ${other==="agent"?"Agent":"Automatisation"} pour voir la différence côte à côte.</p>
+      <button class="btn primary" id="switch" type="button">Essayer le mode ${other==="agent"?"Agent":"Automatisation"}</button>`;
+  }
+  el.innerHTML=html;
+  const sw=$("#switch");if(sw)sw.onclick=()=>{$("#m-"+other).checked=true;reset()};
+}
+
+function render(){
+  renderDiagram();renderPanels();renderJournal();renderBanner();renderVerdict();
+  const st=$("#status"),over=S.finished||S.halted;
+  st.className="chip"+(S.halted?" halt":S.finished?" done":S.phase>=0?" run":"");
+  st.textContent=S.halted?"Arrêté":S.finished?"Terminé":S.phase<0?"Prêt":S.c.mode==="agent"?`Tour ${S.cur.n} sur ${S.c.maxTurns}`:`Étape ${S.cur.n} sur 3`;
+  $("#next").disabled=!!over;
+  const gb=$("#guardBtn");gb.disabled=!!over;
+  document.querySelectorAll("#guardMenu [data-guard]").forEach(b=>{b.disabled=S.guards.has(b.dataset.guard)});
+  if(over) $("#guardMenu").hidden=true,gb.setAttribute("aria-expanded","false");
+}
+
+/* ---------- Événements ---------- */
+$("#next").onclick=()=>{stopAuto();next()};
+$("#play").onclick=()=>timer?stopAuto():startAuto();
+$("#reset").onclick=reset;
+$("#guardBtn").onclick=()=>{const m=$("#guardMenu"),open=m.hidden;m.hidden=!open;$("#guardBtn").setAttribute("aria-expanded",String(open))};
+document.querySelectorAll("#guardMenu [data-guard]").forEach(b=>b.onclick=()=>injectGuard(b.dataset.guard));
+$("#config").addEventListener("change",reset);
+$("#maxTurns").addEventListener("input",()=>{$("#maxTurnsVal").textContent=$("#maxTurns").value});
+reset();
+})();
+</script>
+</body>
+</html>

@@ -16,7 +16,7 @@ Projet de motion graphics « à la volée ». Tout est installé par `scripts/se
 | Courbes d'easing type After Effects | `bezier-easing`, `Easing.bezier` de Remotion | |
 | Timelines GSAP (easings `back`, `expo`, SplitText…) | `gsap`, timeline `paused` + `tl.seek(frame / fps)` | voir `src/toolkit/ToolkitDemo.tsx` |
 | Animations Lottie / After Effects exportées | `@remotion/lottie`, `lottie-web` ; Python `lottie` (conversion SVG→Lottie, rendu) | |
-| Polices | `@remotion/google-fonts`, `@remotion/fonts` (fichiers locaux dans `public/fonts`) | |
+| Polices | `@remotion/fonts` + fichiers `.woff2` dans `public/fonts` (copiés depuis `@fontsource/*`) | `@remotion/google-fonts` échoue au rendu dans le conteneur |
 | Sous-titres animés, audio-réactif | `@remotion/captions`, `@remotion/media-utils` | |
 | Couleurs, dégradés, échelles, data viz animée | `culori`, `d3-scale`, `d3-shape`, `d3-interpolate` | |
 | Vidéo HTML + GSAP (alternative à Remotion) | **HyperFrames** (`npx hyperframes`) | skills `hyperframes*` |
@@ -45,4 +45,7 @@ Les charger avant d'écrire une composition.
   Playwright de `/opt/pw-browsers` (configuré dans `remotion.config.ts` et `HYPERFRAMES_BROWSER_PATH`).
 - `cdn.jsdelivr.net`, `unpkg.com`, `cdnjs` sont bloqués : après `hyperframes init`, lancer
   `scripts/hf-vendor.sh <projet>` pour remplacer GSAP/Lottie CDN par des copies locales.
-- Google Fonts est accessible ; Hugging Face ne l'est pas (pas de modèles Whisper/TTS locaux).
+- Le Chrome de rendu refuse le certificat du proxy : Google Fonts et toute ressource distante échouent.
+  Embarquer les polices (`npm i @fontsource/<police>` puis copie dans `public/fonts`).
+  Hugging Face est inaccessible (pas de modèles Whisper/TTS locaux).
+- Marque Senza : logos dans `public/senza/`, palette dans `src/senza/SenzaShowreel.tsx` (objet `S`).

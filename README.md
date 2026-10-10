@@ -40,3 +40,18 @@ dans [`CLAUDE.md`](CLAUDE.md).
 - Skills Claude : Remotion, HyperFrames, GSAP (`.claude/skills/`)
 
 `npm run render:demo` rend `ToolkitDemo` (6,5 s), qui vérifie chaque brique.
+
+## Showreel Senza Formations (25 s)
+
+`SenzaShowreel` — rendu : [`rendu/senza-showreel.mp4`](rendu/senza-showreel.mp4)
+
+| Temps | Scène | Outils mis en avant |
+|---|---|---|
+| 0–4 s | Pile de cartes du logo en 3D qui tombe en place, puis révélation du wordmark | `@remotion/three`, drei `RoundedBox`, masques |
+| 3,5–7,8 s | « Former pour transformer. pas pour certifier. » | typo cinétique lettre à lettre, marker, mot fantôme animé au bruit |
+| 7,4–12,8 s | Carrousel 3D des domaines (IA, No-code, Data…) | CSS 3D, tracé animé `@remotion/paths` |
+| 12,4–17,7 s | 6 000+ apprenants, 200+ formateurs, 50 lieux, Qualiopi, 4,8/5 | compteurs, anneau `d3-shape`, `@remotion/shapes` |
+| 17,2–21,4 s | Financement : CPF, France Travail, OPCO, 3x sans frais | `@remotion/motion-blur`, morphing `flubber` |
+| 20,8–25 s | Logo + « Et vous, vous vous formez à quoi ? » + URL | transitions `wipe`, `slide`, `clockWipe`, `fade` |
+
+Chiffres repris du design system Senza (skill `senza-guides-pdf`).

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" font-family="Poppins, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+<title id="t">Architecture Softr et Airtable</title>
+<desc id="d">Les blocs de l'interface Softr (liste des clients, formulaire de demande, tableau de suivi, fil d'échanges) reliés aux tables Airtable (Clients, Demandes, Interactions) avec des flèches de lecture et d'écriture.</desc>
+<defs><marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#4E4EEA"/></marker><marker id="a-yel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#E0AA00"/></marker><marker id="a-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#1C1C2E"/></marker><marker id="a-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#7A7A8C"/></marker><marker id="a-coral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#E5484D"/></marker><marker id="a-deep" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#2F2FB5"/></marker></defs>
+<rect width="1200" height="700" fill="#FBFBF8"/>
+<rect x="40" y="28" width="36.4" height="26" rx="13.0" fill="#1C1C2E" stroke="none" stroke-width="0" />
+<text x="58.2" y="45.2" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle" >M3</text>
+<text x="40" y="88.0" font-size="28" font-weight="700" fill="#1C1C2E" text-anchor="start" >Architecture Softr + Airtable</text>
+<text x="40" y="114.0" font-size="14" font-weight="400" fill="#7A7A8C" text-anchor="start" >Softr affiche et collecte ; Airtable stocke.</text>
+<rect x="40" y="140" width="500" height="530" rx="18" fill="#FFFFFF" stroke="#DADAE3" stroke-width="1.5" />
+<path d="M40 182 H540" fill="none" stroke="#DADAE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="64" cy="161" r="5.5" fill="#E5484D" stroke="none" stroke-width="1.5"/>
+<circle cx="84" cy="161" r="5.5" fill="#F9C623" stroke="none" stroke-width="1.5"/>
+<circle cx="104" cy="161" r="5.5" fill="#3DBE7A" stroke="none" stroke-width="1.5"/>
+<rect x="130" y="150" width="330" height="22" rx="11" fill="#FBFBF8" stroke="none" stroke-width="1.5" />
+<text x="295" y="165.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >app.softr.io — Portail Emma Rousseau</text>
+<text x="40" y="134.0" font-size="13" font-weight="700" fill="#4E4EEA" text-anchor="start" >SOFTR · l'interface</text>
+<rect x="62" y="200" width="456" height="98" rx="12" fill="#ECECFD" stroke="#4E4EEA" stroke-width="1.5" />
+<text x="82" y="236.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Liste des clients</text>
+<text x="82" y="258.0" font-size="12" font-weight="400" fill="#4E4EEA" text-anchor="start" >bloc « Liste »</text>
+<rect x="82" y="270" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="174" y="270" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="266" y="270" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="62" y="324" width="456" height="98" rx="12" fill="#ECECFD" stroke="#4E4EEA" stroke-width="1.5" />
+<text x="82" y="360.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Formulaire de demande</text>
+<text x="82" y="382.0" font-size="12" font-weight="400" fill="#4E4EEA" text-anchor="start" >bloc « Formulaire »</text>
+<rect x="82" y="394" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="174" y="394" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="266" y="394" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="62" y="448" width="456" height="98" rx="12" fill="#ECECFD" stroke="#4E4EEA" stroke-width="1.5" />
+<text x="82" y="484.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Tableau de suivi</text>
+<text x="82" y="506.0" font-size="12" font-weight="400" fill="#4E4EEA" text-anchor="start" >bloc « Tableau »</text>
+<rect x="82" y="518" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="174" y="518" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="266" y="518" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="62" y="572" width="456" height="98" rx="12" fill="#ECECFD" stroke="#4E4EEA" stroke-width="1.5" />
+<text x="82" y="608.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Fil d'échanges</text>
+<text x="82" y="630.0" font-size="12" font-weight="400" fill="#4E4EEA" text-anchor="start" >bloc « Liste / Fiche »</text>
+<rect x="82" y="642" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="174" y="642" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<rect x="266" y="642" width="80" height="10" rx="5" fill="#FFFFFF" stroke="none" stroke-width="1.5" />
+<text x="790" y="134.0" font-size="13" font-weight="700" fill="#B88A00" text-anchor="start" >AIRTABLE · les données</text>
+<rect x="790" y="200" width="370" height="98" rx="12" fill="#FEF4CF" stroke="#E0AA00" stroke-width="1.5" />
+<text x="810" y="232.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Table  Clients</text>
+<text x="810" y="256.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="start" >Nom · Email · Société · Statut</text>
+<rect x="790" y="324" width="370" height="222" rx="12" fill="#FEF4CF" stroke="#E0AA00" stroke-width="1.5" />
+<text x="810" y="356.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Table  Demandes</text>
+<text x="810" y="382.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="start" >Objet · Description</text>
+<text x="810" y="404.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="start" >Urgence · Statut</text>
+<text x="810" y="426.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="start" >Date de création</text>
+<text x="810" y="448.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="start" >Client  (lien → Clients)</text>
+<rect x="790" y="572" width="370" height="98" rx="12" fill="#FEF4CF" stroke="#E0AA00" stroke-width="1.5" />
+<text x="810" y="604.0" font-size="16" font-weight="700" fill="#1C1C2E" text-anchor="start" >Table  Interactions</text>
+<text x="810" y="628.0" font-size="12" font-weight="400" fill="#7A7A8C" text-anchor="start" >Date · Canal · Résumé · Demande liée</text>
+<path d="M1100 298 L1100 324" fill="none" stroke="#B88A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1112" y="316.0" font-size="11" font-weight="600" fill="#B88A00" text-anchor="start" >1 — n</text>
+<path d="M1100 546 L1100 572" fill="none" stroke="#B88A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1112" y="564.0" font-size="11" font-weight="600" fill="#B88A00" text-anchor="start" >1 — n</text>
+<path d="M786 249 L522 249" fill="none" stroke="#4E4EEA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<rect x="616" y="225" width="76" height="22" rx="11.0" fill="#FBFBF8" stroke="none" stroke-width="0" />
+<text x="654.0" y="239.8" font-size="11" font-weight="600" fill="#4E4EEA" text-anchor="middle" >lecture</text>
+<path d="M522 373 L786 373" fill="none" stroke="#E0AA00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-yel)"/>
+<rect x="616" y="349" width="76" height="22" rx="11.0" fill="#FBFBF8" stroke="none" stroke-width="0" />
+<text x="654.0" y="363.9" font-size="11" font-weight="600" fill="#B88A00" text-anchor="middle" >écriture</text>
+<path d="M522 497 L786 497" fill="none" stroke="#1C1C2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-ink)" marker-start="url(#a-ink)"/>
+<rect x="616" y="473" width="76" height="22" rx="11.0" fill="#FBFBF8" stroke="none" stroke-width="0" />
+<text x="654.0" y="487.9" font-size="11" font-weight="600" fill="#1C1C2E" text-anchor="middle" >lect. + écr.</text>
+<path d="M786 621 L522 621" fill="none" stroke="#4E4EEA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-blue)"/>
+<rect x="616" y="597" width="76" height="22" rx="11.0" fill="#FBFBF8" stroke="none" stroke-width="0" />
+<text x="654.0" y="611.9" font-size="11" font-weight="600" fill="#4E4EEA" text-anchor="middle" >lecture</text>
+<text x="654" y="176.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >API Airtable</text>
+<text x="654" y="194.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >(connexion Softr)</text>
+</svg>

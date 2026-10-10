@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 600" width="1320" height="600" font-family="Poppins, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+<title id="t">Frise du parcours de certification</title>
+<desc id="d">Les étapes de M1 à M7 sur une ligne temporelle : cinq modules de formation, puis le module 6 de finalisation du projet et le module 7 avec le jour de la certification mis en évidence.</desc>
+<defs><marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#4E4EEA"/></marker><marker id="a-yel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#E0AA00"/></marker><marker id="a-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#1C1C2E"/></marker><marker id="a-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#7A7A8C"/></marker><marker id="a-coral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#E5484D"/></marker><marker id="a-deep" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#2F2FB5"/></marker></defs>
+<rect width="1320" height="600" fill="#FBFBF8"/>
+<rect x="40" y="28" width="77.39999999999999" height="26" rx="13.0" fill="#1C1C2E" stroke="none" stroke-width="0" />
+<text x="78.69999999999999" y="45.2" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle" >M6 / M7</text>
+<text x="40" y="88.0" font-size="28" font-weight="700" fill="#1C1C2E" text-anchor="start" >Parcours de certification</text>
+<text x="40" y="114.0" font-size="14" font-weight="400" fill="#7A7A8C" text-anchor="start" >De M1 au jour J : où l'on en est, et ce qui reste.</text>
+<path d="M80.0 214 V204 H866.6666666666666 V214" fill="none" stroke="#7A7A8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="473.3333333333333" y="190.0" font-size="13" font-weight="700" fill="#7A7A8C" text-anchor="middle" >FORMATION · acquisition des compétences</text>
+<rect x="933.3" y="236" width="316.7" height="270" rx="24" fill="#FEF4CF" stroke="none" stroke-width="1.5" opacity="0.7"/>
+<path d="M120 330 L1180 330" fill="none" stroke="#DADAE3" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M120 330 L826.6666666666666 330" fill="none" stroke="#4E4EEA" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M826.6666666666666 330 L1180.0 330" fill="none" stroke="#F9C623" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="120.0" cy="330" r="26" fill="#F9C623" stroke="#FFFFFF" stroke-width="4"/>
+<text x="120.0" y="336.0" font-size="14" font-weight="700" fill="#1C1C2E" text-anchor="middle" >M1</text>
+<text x="120.0" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Fondamentaux de l'IA</text>
+<text x="120.0" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >3 h</text>
+<circle cx="296.7" cy="330" r="26" fill="#F9C623" stroke="#FFFFFF" stroke-width="4"/>
+<text x="296.7" y="336.0" font-size="14" font-weight="700" fill="#1C1C2E" text-anchor="middle" >M2</text>
+<text x="296.7" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Automatiser</text>
+<text x="296.7" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >4 h</text>
+<circle cx="473.3" cy="330" r="26" fill="#4E4EEA" stroke="#FFFFFF" stroke-width="4"/>
+<text x="473.3" y="336.0" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle" >M3</text>
+<text x="473.3" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Softr + Airtable</text>
+<text x="473.3" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >7 h</text>
+<circle cx="650.0" cy="330" r="26" fill="#4E4EEA" stroke="#FFFFFF" stroke-width="4"/>
+<text x="650.0" y="336.0" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle" >M4</text>
+<text x="650.0" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Scénarios N8N</text>
+<text x="650.0" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >7 h</text>
+<circle cx="826.7" cy="330" r="26" fill="#2F2FB5" stroke="#FFFFFF" stroke-width="4"/>
+<text x="826.7" y="336.0" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle" >M5</text>
+<text x="826.7" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Agents IA</text>
+<text x="826.7" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >7 h</text>
+<circle cx="1003.3" cy="330" r="26" fill="#1C1C2E" stroke="#FFFFFF" stroke-width="4"/>
+<text x="1003.3" y="336.0" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle" >M6</text>
+<text x="1003.3" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Projet fil rouge</text>
+<text x="1003.3" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >3 h</text>
+<circle cx="1180.0" cy="330" r="62" fill="#FEF4CF" stroke="none" stroke-width="1.5"/>
+<circle cx="1180.0" cy="330" r="52" fill="#FEF4CF" stroke="#E0AA00" stroke-width="2"/>
+<circle cx="1180.0" cy="330" r="40" fill="#F9C623" stroke="#FFFFFF" stroke-width="4"/>
+<text x="1180.0" y="336.0" font-size="17" font-weight="700" fill="#1C1C2E" text-anchor="middle" >M7</text>
+<text x="1180.0" y="412.0" font-size="13.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >Certification</text>
+<text x="1180.0" y="432.0" font-size="12" font-weight="600" fill="#7A7A8C" text-anchor="middle" >3 h</text>
+<text x="120.0" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Comprendre</text>
+<text x="120.0" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >l'IA</text>
+<text x="296.7" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Poser les bases</text>
+<text x="296.7" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >de l'automatisation</text>
+<text x="473.3" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Données +</text>
+<text x="473.3" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >interface</text>
+<text x="650.0" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Scénarios</text>
+<text x="650.0" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >automatisés</text>
+<text x="826.7" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Agents</text>
+<text x="826.7" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >autonomes</text>
+<text x="1003.3" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Livrable</text>
+<text x="1003.3" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >finalisé</text>
+<text x="1180.0" y="456.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >Épreuve</text>
+<text x="1180.0" y="471.0" font-size="11" font-weight="400" fill="#7A7A8C" text-anchor="middle" >devant le jury</text>
+<path d="M1180.0 268 V224" fill="none" stroke="#E0AA00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1080.0" y="180" width="200" height="44" rx="22" fill="#F9C623" stroke="none" stroke-width="1.5" />
+<text x="1180.0" y="208.0" font-size="12.5" font-weight="700" fill="#1C1C2E" text-anchor="middle" >JOUR J · CERTIFICATION</text>
+<path d="M1003.3 300 V246" fill="none" stroke="#B88A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+<rect x="933.3" y="218" width="140" height="26" rx="13.0" fill="#FFFFFF" stroke="none" stroke-width="0" />
+<text x="1003.3" y="235.0" font-size="11.5" font-weight="600" fill="#8A6500" text-anchor="middle" >livrable remis</text>
+<text x="40" y="560.0" font-size="12.5" font-weight="400" fill="#7A7A8C" text-anchor="start" >Chaque module se termine par un acquis évalué ; le projet fil rouge nourrit l'épreuve du jour J.</text>
+</svg>

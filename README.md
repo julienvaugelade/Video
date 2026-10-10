@@ -39,4 +39,4 @@ dans [`CLAUDE.md`](CLAUDE.md).
 - **Manim**, **Blender 4**, **ffmpeg**, `rsvg-convert`, `potrace`, `gifsicle`
 - Skills Claude : Remotion, HyperFrames, GSAP (`.claude/skills/`)
 
-`npm run render:demo` rend `ToolkitDemo` (8 s), qui vérifie chaque brique.
+`npm run render:demo` rend `ToolkitDemo` (6,5 s), qui vérifie chaque brique.

@@ -25,3 +25,18 @@ npm run render   # rendu MP4 dans out/
 ```
 
 Toute la chronologie est dans `src/AutomationVsAgent.tsx` (temps exprimés en secondes).
+
+## Boîte à outils motion design
+
+Le dépôt sert aussi de studio de motion design piloté par Claude. Installation : `npm run setup`
+(automatique au démarrage des sessions Claude Code cloud). Détail des outils et de la méthode
+dans [`CLAUDE.md`](CLAUDE.md).
+
+- **Remotion** + `transitions`, `shapes`, `paths`, `noise`, `motion-blur`, `three`, `lottie`,
+  `google-fonts`, `captions`, `media-utils`, `light-leaks`…
+- **Three.js / React Three Fiber / drei**, **GSAP**, **flubber** (morphing), **culori**, **d3**
+- **HyperFrames** (vidéo HTML + GSAP) — `scripts/hf-vendor.sh` pour fonctionner hors CDN
+- **Manim**, **Blender 4**, **ffmpeg**, `rsvg-convert`, `potrace`, `gifsicle`
+- Skills Claude : Remotion, HyperFrames, GSAP (`.claude/skills/`)
+
+`npm run render:demo` rend `ToolkitDemo` (8 s), qui vérifie chaque brique.

@@ -241,6 +241,12 @@ const SceneManifesto: React.FC = () => {
 
 const DOMAINS = ['IA', 'No-code', 'Data', 'Automatisation', 'Webmarketing', 'Réseaux sociaux', 'Vidéo', "Création d'entreprise"];
 
+/** Taille qui fait tenir le mot le plus long dans la carte (380 px utiles, Poppins 700 ≈ 0,68 em/caractère). */
+const cardFontSize = (label: string) => {
+  const longest = Math.max(...label.split(' ').map((w) => w.length));
+  return Math.min(58, Math.floor(380 / (longest * 0.68)));
+};
+
 const SceneDomains: React.FC = () => {
   const frame = useT();
   const {fps} = useVideoConfig();
@@ -302,7 +308,7 @@ const SceneDomains: React.FC = () => {
                 <div style={{fontFamily: MULISH, fontWeight: 800, fontSize: 22, letterSpacing: '0.2em', color: front > 0.5 ? S.lavender : S.indigo}}>
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <div style={{fontFamily: FONT, fontWeight: 700, fontSize: d.length > 12 ? 44 : 58, lineHeight: 1.1, color: front > 0.5 ? S.white : S.ink, marginTop: 10}}>
+                <div style={{fontFamily: FONT, fontWeight: 700, fontSize: cardFontSize(d), lineHeight: 1.1, color: front > 0.5 ? S.white : S.ink, marginTop: 10}}>
                   {d}
                 </div>
               </div>

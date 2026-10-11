@@ -25,3 +25,36 @@ npm run render   # rendu MP4 dans out/
 ```
 
 Toute la chronologie est dans `src/AutomationVsAgent.tsx` (temps exprimés en secondes).
+
+## Boîte à outils motion design
+
+Le dépôt sert aussi de studio de motion design piloté par Claude. Installation : `npm run setup`
+(automatique au démarrage des sessions Claude Code cloud). Détail des outils et de la méthode
+dans [`CLAUDE.md`](CLAUDE.md).
+
+- **Remotion** + `transitions`, `shapes`, `paths`, `noise`, `motion-blur`, `three`, `lottie`,
+  `google-fonts`, `captions`, `media-utils`, `light-leaks`…
+- **Three.js / React Three Fiber / drei**, **GSAP**, **flubber** (morphing), **culori**, **d3**
+- **HyperFrames** (vidéo HTML + GSAP) — `scripts/hf-vendor.sh` pour fonctionner hors CDN
+- **Manim**, **Blender 4**, **ffmpeg**, `rsvg-convert`, `potrace`, `gifsicle`
+- Skills Claude : Remotion, HyperFrames, GSAP (`.claude/skills/`)
+
+`npm run render:demo` rend `ToolkitDemo` (6,5 s), qui vérifie chaque brique.
+
+## Showreel Senza Formations (46,5 s)
+
+`SenzaShowreel` — rendu : [`rendu/senza-showreel.mp4`](rendu/senza-showreel.mp4).
+Les animations sont écrites en frames « maquette » puis jouées deux fois plus lentement
+(constante `K` dans `src/senza/SenzaShowreel.tsx`).
+
+| Temps | Scène | Outils mis en avant |
+|---|---|---|
+| 0–3 s | Logo Senza d'emblée, grille de points et blob qui apparaissent | `@remotion/noise` |
+| 2–9,7 s | « Former pour transformer. » | typo cinétique lettre à lettre, marker, mot fantôme animé au bruit |
+| 8,7–18,7 s | Carrousel 3D des domaines (IA, No-code, Data…) | CSS 3D, tracé animé `@remotion/paths` |
+| 17,8–25,3 s | « Votre projet, vos objectifs. » : interrupteurs Individuel ⇄ En groupe, À distance ⇄ En présentiel, formations certifiantes (CPF, OPCO, France Travail) | interpolation de couleurs, tracé de coche |
+| 24,3–34 s | 6 000+ apprenants, 200+ formateurs, 50 lieux, Qualiopi, 4,8/5 | compteurs, anneau `d3-shape`, `@remotion/shapes` |
+| 32,9–40,3 s | Financement : CPF, France Travail, OPCO, 3x sans frais | `@remotion/motion-blur`, morphing `flubber` |
+| 39,1–46,5 s | Logo + « Et vous, vous vous formez à quoi ? » + URL | transitions `wipe`, `slide`, `clockWipe`, `fade` |
+
+Chiffres repris du design system Senza (skill `senza-guides-pdf`).

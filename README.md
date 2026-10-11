@@ -41,17 +41,19 @@ dans [`CLAUDE.md`](CLAUDE.md).
 
 `npm run render:demo` rend `ToolkitDemo` (6,5 s), qui vérifie chaque brique.
 
-## Showreel Senza Formations (25 s)
+## Showreel Senza Formations (46 s)
 
-`SenzaShowreel` — rendu : [`rendu/senza-showreel.mp4`](rendu/senza-showreel.mp4)
+`SenzaShowreel` — rendu : [`rendu/senza-showreel.mp4`](rendu/senza-showreel.mp4).
+Les animations sont écrites en frames « maquette » puis jouées deux fois plus lentement
+(constante `K` dans `src/senza/SenzaShowreel.tsx`).
 
 | Temps | Scène | Outils mis en avant |
 |---|---|---|
-| 0–4 s | Pile de cartes du logo en 3D qui tombe en place, puis révélation du wordmark | `@remotion/three`, drei `RoundedBox`, masques |
-| 3,5–7,8 s | « Former pour transformer. pas pour certifier. » | typo cinétique lettre à lettre, marker, mot fantôme animé au bruit |
-| 7,4–12,8 s | Carrousel 3D des domaines (IA, No-code, Data…) | CSS 3D, tracé animé `@remotion/paths` |
-| 12,4–17,7 s | 6 000+ apprenants, 200+ formateurs, 50 lieux, Qualiopi, 4,8/5 | compteurs, anneau `d3-shape`, `@remotion/shapes` |
-| 17,2–21,4 s | Financement : CPF, France Travail, OPCO, 3x sans frais | `@remotion/motion-blur`, morphing `flubber` |
-| 20,8–25 s | Logo + « Et vous, vous vous formez à quoi ? » + URL | transitions `wipe`, `slide`, `clockWipe`, `fade` |
+| 0–4 s | Logo Senza d'emblée, grille de points et blob qui apparaissent | `@remotion/noise` |
+| 3–12,5 s | « Former pour transformer. » | typo cinétique lettre à lettre, marker, mot fantôme animé au bruit |
+| 11,6–22,6 s | Carrousel 3D des domaines (IA, No-code, Data…) | CSS 3D, tracé animé `@remotion/paths` |
+| 21,6–32,3 s | 6 000+ apprenants, 200+ formateurs, 50 lieux, Qualiopi, 4,8/5 | compteurs, anneau `d3-shape`, `@remotion/shapes` |
+| 31,2–39,5 s | Financement : CPF, France Travail, OPCO, 3x sans frais | `@remotion/motion-blur`, morphing `flubber` |
+| 38,3–46 s | Logo + « Et vous, vous vous formez à quoi ? » + URL | transitions `wipe`, `slide`, `clockWipe`, `fade` |
 
 Chiffres repris du design system Senza (skill `senza-guides-pdf`).

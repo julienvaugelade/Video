@@ -18,8 +18,6 @@ import {wipe} from '@remotion/transitions/wipe';
 import {slide} from '@remotion/transitions/slide';
 import {fade} from '@remotion/transitions/fade';
 import {clockWipe} from '@remotion/transitions/clock-wipe';
-import {ThreeCanvas} from '@remotion/three';
-import {RoundedBox} from '@react-three/drei';
 import {noise2D} from '@remotion/noise';
 import {evolvePath} from '@remotion/paths';
 import {Star} from '@remotion/shapes';
@@ -53,10 +51,18 @@ const easeInOut = Easing.bezier(0.65, 0, 0.35, 1);
 const ramp = (f: number, a: number, b: number, e = ease) =>
   interpolate(f, [a, b], [0, 1], {...CLAMP, easing: e});
 
+// Facteur de ralenti : toutes les animations sont écrites en frames « maquette »
+// à 30 i/s ; le rendu les joue K fois plus lentement.
+const K = 2;
+const useT = () => useCurrentFrame() / K;
+/** spring() exprimé en frames maquette (f peut être fractionnaire). */
+const springAt = (f: number, fps: number, config: Parameters<typeof spring>[0]['config']) =>
+  spring({frame: f * K, fps: fps * K, config});
+
 const useSpring = (delay: number, config = {damping: 15, stiffness: 160, mass: 0.8}) => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const {fps} = useVideoConfig();
-  return spring({frame: frame - delay, fps, config});
+  return springAt(frame - delay, fps, config);
 };
 
 // ---------------------------------------------------------------------------
@@ -89,7 +95,7 @@ const DottedGrid: React.FC<{color: string; corner?: 'tr' | 'bl'; reveal?: number
 
 /** Blob organique doux, déformé par du bruit. */
 const Blob: React.FC<{x: number; y: number; r: number; color: string; seed: string}> = ({x, y, r, color, seed}) => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const n = 48;
   const pts = Array.from({length: n}, (_, i) => {
     const a = (i / n) * Math.PI * 2;
@@ -124,69 +130,19 @@ const Kicker: React.FC<{children: React.ReactNode; color: string; delay?: number
 };
 
 // ---------------------------------------------------------------------------
-// 1. Logo en 3D : la pile de cartes tombe en place, puis le wordmark se révèle
+// 1. Logo affiché d'emblée, léger zoom et motifs qui apparaissent
 // ---------------------------------------------------------------------------
 
-const CardStack3D: React.FC = () => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const cards = [0, 1, 2].map((i) => {
-    const s = spring({frame: frame - 4 - i * 7, fps, config: {damping: 11, stiffness: 120, mass: 0.9}});
-    return {i, s};
-  });
-  const orbit = interpolate(frame, [0, 70], [0.9, 0], {...CLAMP, easing: ease});
-  return (
-    <ThreeCanvas width={1920} height={1080} camera={{position: [0, 0, 9], fov: 35}}>
-      <ambientLight intensity={0.9} />
-      <directionalLight position={[4, 6, 8]} intensity={2.2} />
-      <directionalLight position={[-6, -2, 4]} intensity={0.6} color={S.lavender} />
-      <group rotation={[orbit * 0.5, orbit, -0.5 + orbit * 0.3]}>
-        {cards.map(({i, s}) => (
-          <RoundedBox
-            key={i}
-            args={[2.6, 2.1, 0.16]}
-            radius={0.07}
-            smoothness={4}
-            position={[(2 - i) * -0.16, (2 - i) * 0.3 + (1 - s) * 6, i * 0.2]}
-            rotation={[0, 0, (1 - s) * 0.8]}
-          >
-            <meshStandardMaterial color={i === 2 ? S.indigo : i === 1 ? '#5F5FEE' : '#7373F0'} roughness={0.35} metalness={0.15} />
-          </RoundedBox>
-        ))}
-      </group>
-    </ThreeCanvas>
-  );
-};
-
 const SceneLogo: React.FC = () => {
-  const frame = useCurrentFrame();
-  const to2D = ramp(frame, 62, 84);
-  const word = ramp(frame, 74, 104);
-  const grid = ramp(frame, 0, 60);
+  const frame = useT();
+  const grid = ramp(frame, 0, 50);
+  const zoom = interpolate(frame, [0, 60], [1, 1.04], CLAMP);
   return (
     <AbsoluteFill style={{backgroundColor: S.paper}}>
       <DottedGrid color={S.indigo} reveal={grid} />
       <Blob x={180} y={980} r={170 * grid} color={S.lavenderSoft} seed="b1" />
-      <AbsoluteFill style={{opacity: 1 - to2D, transform: `scale(${1 - to2D * 0.35})`}}>
-        <CardStack3D />
-      </AbsoluteFill>
-      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', opacity: to2D}}>
-        <div style={{position: 'relative', width: 1100, height: 345}}>
-          {/* Glyphe (≈ 33 % gauche du logo) puis wordmark révélé par un masque */}
-          <Img
-            src={staticFile('senza/logo-senza.png')}
-            style={{position: 'absolute', width: 1100, clipPath: 'inset(0 67% 0 0)', transform: `scale(${0.85 + to2D * 0.15})`}}
-          />
-          <Img
-            src={staticFile('senza/logo-senza.png')}
-            style={{
-              position: 'absolute',
-              width: 1100,
-              clipPath: `inset(0 ${(1 - word) * 67}% 0 33%)`,
-              transform: `translateX(${(1 - word) * -40}px)`,
-            }}
-          />
-        </div>
+      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Img src={staticFile('senza/logo-senza.png')} style={{width: 1100, transform: `scale(${zoom})`}} />
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -203,12 +159,12 @@ const Letters: React.FC<{text: string; delay: number; size: number; color: strin
   color,
   stagger = 2,
 }) => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const {fps} = useVideoConfig();
   return (
     <div style={{display: 'flex', fontFamily: FONT, fontWeight: 700, fontSize: size, color, lineHeight: 1, letterSpacing: '-0.02em'}}>
       {text.split('').map((ch, i) => {
-        const s = spring({frame: frame - delay - i * stagger, fps, config: {damping: 13, stiffness: 200, mass: 0.6}});
+        const s = springAt(frame - delay - i * stagger, fps, {damping: 13, stiffness: 200, mass: 0.6});
         return (
           <span
             key={i}
@@ -229,9 +185,8 @@ const Letters: React.FC<{text: string; delay: number; size: number; color: strin
 };
 
 const SceneManifesto: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const marker = ramp(frame, 46, 66, easeInOut);
-  const sub = useSpring(70);
   const ghostX = -frame * 3 + noise2D('g', 0, frame / 80) * 40;
   return (
     <AbsoluteFill style={{backgroundColor: S.indigo, overflow: 'hidden'}}>
@@ -275,20 +230,6 @@ const SceneManifesto: React.FC = () => {
             <Letters text="TRANSFORMER." delay={22} size={170} color={S.white} />
           </div>
         </div>
-        <div
-          style={{
-            marginTop: 40,
-            fontFamily: FONT,
-            fontStyle: 'italic',
-            fontWeight: 500,
-            fontSize: 56,
-            color: S.lavender,
-            opacity: sub,
-            transform: `translateX(${(1 - sub) * -40}px)`,
-          }}
-        >
-          pas pour certifier.
-        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -301,9 +242,9 @@ const SceneManifesto: React.FC = () => {
 const DOMAINS = ['IA', 'No-code', 'Data', 'Automatisation', 'Webmarketing', 'Réseaux sociaux', 'Vidéo', "Création d'entreprise"];
 
 const SceneDomains: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const {fps} = useVideoConfig();
-  const intro = spring({frame, fps, config: {damping: 18, stiffness: 90}});
+  const intro = springAt(frame, fps, {damping: 18, stiffness: 90});
   const n = DOMAINS.length;
   // Le carrousel avance par crans : chaque domaine passe au premier plan.
   const steps = frame / 16;
@@ -361,7 +302,7 @@ const SceneDomains: React.FC = () => {
                 <div style={{fontFamily: MULISH, fontWeight: 800, fontSize: 22, letterSpacing: '0.2em', color: front > 0.5 ? S.lavender : S.indigo}}>
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <div style={{fontFamily: FONT, fontWeight: 700, fontSize: d.length > 14 ? 44 : 58, lineHeight: 1.1, color: front > 0.5 ? S.white : S.ink, marginTop: 10}}>
+                <div style={{fontFamily: FONT, fontWeight: 700, fontSize: d.length > 12 ? 44 : 58, lineHeight: 1.1, color: front > 0.5 ? S.white : S.ink, marginTop: 10}}>
                   {d}
                 </div>
               </div>
@@ -378,7 +319,7 @@ const SceneDomains: React.FC = () => {
 // ---------------------------------------------------------------------------
 
 const Counter: React.FC<{to: number; delay: number; suffix?: string; decimals?: number}> = ({to, delay, suffix = '', decimals = 0}) => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const v = interpolate(frame, [delay, delay + 40], [0, to], {...CLAMP, easing: ease});
   const txt = decimals ? v.toFixed(decimals).replace('.', ',') : Math.round(v).toLocaleString('fr-FR').replace(/ | /g, ' ');
   return (
@@ -412,7 +353,7 @@ const StatTile: React.FC<{delay: number; children: React.ReactNode; label: strin
 };
 
 const RatingRing: React.FC<{delay: number}> = ({delay}) => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const p = useSpring(delay);
   const fill = interpolate(frame, [delay, delay + 45], [0, 4.8 / 5], {...CLAMP, easing: ease});
   const a = arc<unknown>().innerRadius(150).outerRadius(180).cornerRadius(15);
@@ -432,7 +373,7 @@ const RatingRing: React.FC<{delay: number}> = ({delay}) => {
       </svg>
       <div style={{display: 'flex', gap: 14, marginTop: 24}}>
         {[0, 1, 2, 3, 4].map((i) => {
-          const s = spring({frame: frame - delay - 10 - i * 5, fps: 30, config: {damping: 9, stiffness: 220}});
+          const s = springAt(frame - delay - 10 - i * 5, 30, {damping: 9, stiffness: 220});
           return (
             <div key={i} style={{transform: `scale(${s}) rotate(${(1 - s) * -90}deg)`}}>
               <Star points={5} innerRadius={14} outerRadius={30} fill={i < 4 ? S.yellow : S.lavender} cornerRadius={3} />
@@ -480,11 +421,11 @@ const CIRCLE = 'M60,10 A50,50 0 1,1 59.9,10 Z';
 const CHECK = 'M18,62 L46,90 L104,30 L112,38 L46,106 L10,70 Z';
 
 const SceneFunding: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const {fps} = useVideoConfig();
   const morpher = useMemo(() => morph(CIRCLE, CHECK, {maxSegmentLength: 3}), []);
   const m = ramp(frame, 62, 84, easeInOut);
-  const badge = spring({frame: frame - 54, fps, config: {damping: 10, stiffness: 180}});
+  const badge = springAt(frame - 54, fps, {damping: 10, stiffness: 180});
   return (
     <AbsoluteFill style={{backgroundColor: S.indigo}}>
       <DottedGrid color={S.white} />
@@ -497,7 +438,7 @@ const SceneFunding: React.FC = () => {
       <CameraMotionBlur shutterAngle={200} samples={8}>
           <div style={{display: 'flex', gap: 28, position: 'absolute', left: 190, top: 620}}>
             {FUNDING.map((f, i) => {
-              const s = spring({frame: frame - 14 - i * 7, fps, config: {damping: 16, stiffness: 150}});
+              const s = springAt(frame - 14 - i * 7, fps, {damping: 16, stiffness: 150});
               return (
                 <div
                   key={f}
@@ -548,7 +489,7 @@ const SceneFunding: React.FC = () => {
 // ---------------------------------------------------------------------------
 
 const SceneOutro: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useT();
   const logo = useSpring(4, {damping: 14, stiffness: 120, mass: 0.9});
   const cta = useSpring(22);
   const url = useSpring(32);
@@ -586,10 +527,12 @@ const SceneOutro: React.FC = () => {
 // Montage
 // ---------------------------------------------------------------------------
 
-const T = {logo: 120, manifesto: 130, domains: 165, stats: 160, funding: 125};
-const TR = [15, 14, 14, 16, 18];
-export const SENZA_FRAMES = 750;
-const OUTRO = SENZA_FRAMES - Object.values(T).reduce((a, b) => a + b, 0) + TR.reduce((a, b) => a + b, 0);
+// Durées en frames maquette, multipliées par K au montage.
+const T0 = {logo: 60, manifesto: 130, domains: 165, stats: 160, funding: 125, outro: 127};
+const TR0 = [15, 14, 14, 16, 18];
+const T = Object.fromEntries(Object.entries(T0).map(([k, v]) => [k, v * K])) as typeof T0;
+const TR = TR0.map((v) => v * K);
+export const SENZA_FRAMES = Object.values(T).reduce((a, b) => a + b, 0) - TR.reduce((a, b) => a + b, 0);
 
 export const SenzaShowreel: React.FC = () => (
   <AbsoluteFill style={{backgroundColor: S.paper}}>
@@ -614,7 +557,7 @@ export const SenzaShowreel: React.FC = () => (
         <SceneFunding />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: TR[4]})} />
-      <TransitionSeries.Sequence durationInFrames={OUTRO}>
+      <TransitionSeries.Sequence durationInFrames={T.outro}>
         <SceneOutro />
       </TransitionSeries.Sequence>
     </TransitionSeries>

@@ -41,7 +41,7 @@ dans [`CLAUDE.md`](CLAUDE.md).
 
 `npm run render:demo` rend `ToolkitDemo` (6,5 s), qui vérifie chaque brique.
 
-## Showreel Senza Formations (55 s)
+## Showreel Senza Formations (46,5 s)
 
 `SenzaShowreel` — rendu : [`rendu/senza-showreel.mp4`](rendu/senza-showreel.mp4).
 Les animations sont écrites en frames « maquette » puis jouées deux fois plus lentement
@@ -49,12 +49,12 @@ Les animations sont écrites en frames « maquette » puis jouées deux fois plu
 
 | Temps | Scène | Outils mis en avant |
 |---|---|---|
-| 0–4 s | Logo Senza d'emblée, grille de points et blob qui apparaissent | `@remotion/noise` |
-| 3–12,5 s | « Former pour transformer. » | typo cinétique lettre à lettre, marker, mot fantôme animé au bruit |
-| 11,6–22,6 s | Carrousel 3D des domaines (IA, No-code, Data…) | CSS 3D, tracé animé `@remotion/paths` |
-| 20,8–30,8 s | « Votre projet, vos objectifs. » : interrupteurs Individuel ⇄ En groupe, À distance ⇄ En présentiel, formations certifiantes (CPF, OPCO, France Travail) | interpolation de couleurs, tracé de coche |
-| 29,9–40,6 s | 6 000+ apprenants, 200+ formateurs, 50 lieux, Qualiopi, 4,8/5 | compteurs, anneau `d3-shape`, `@remotion/shapes` |
-| 39,5–47,9 s | Financement : CPF, France Travail, OPCO, 3x sans frais | `@remotion/motion-blur`, morphing `flubber` |
-| 46,7–55 s | Logo + « Et vous, vous vous formez à quoi ? » + URL | transitions `wipe`, `slide`, `clockWipe`, `fade` |
+| 0–3 s | Logo Senza d'emblée, grille de points et blob qui apparaissent | `@remotion/noise` |
+| 2–9,7 s | « Former pour transformer. » | typo cinétique lettre à lettre, marker, mot fantôme animé au bruit |
+| 8,7–18,7 s | Carrousel 3D des domaines (IA, No-code, Data…) | CSS 3D, tracé animé `@remotion/paths` |
+| 17,8–25,3 s | « Votre projet, vos objectifs. » : interrupteurs Individuel ⇄ En groupe, À distance ⇄ En présentiel, formations certifiantes (CPF, OPCO, France Travail) | interpolation de couleurs, tracé de coche |
+| 24,3–34 s | 6 000+ apprenants, 200+ formateurs, 50 lieux, Qualiopi, 4,8/5 | compteurs, anneau `d3-shape`, `@remotion/shapes` |
+| 32,9–40,3 s | Financement : CPF, France Travail, OPCO, 3x sans frais | `@remotion/motion-blur`, morphing `flubber` |
+| 39,1–46,5 s | Logo + « Et vous, vous vous formez à quoi ? » + URL | transitions `wipe`, `slide`, `clockWipe`, `fade` |
 
 Chiffres repris du design system Senza (skill `senza-guides-pdf`).

@@ -251,12 +251,13 @@ const cardFontSize = (label: string) => {
 const SceneDomains: React.FC = () => {
   const frame = useT();
   const {fps} = useVideoConfig();
-  const intro = springAt(frame, fps, {damping: 18, stiffness: 90});
+  // Entrée monotone (pas de ressort) : le carrousel tourne toujours dans le même sens.
+  const intro = ramp(frame, 0, 24);
   const n = DOMAINS.length;
   // Le carrousel avance par crans : chaque domaine passe au premier plan.
-  const steps = frame / 16;
+  const steps = Math.max(0, frame - 14) / 16;
   const stepped = Math.floor(steps) + easeInOut(Math.min(1, (steps % 1) * 1.8));
-  const rot = -stepped * (360 / n) - (1 - intro) * 120;
+  const rot = -stepped * (360 / n) + (1 - intro) * 90;
   const R = 640;
   const underline = ramp(frame, 8, 40);
   return (
@@ -389,9 +390,9 @@ const FeatureRow: React.FC<{delay: number; caption: string; children: React.Reac
 
 const SceneFormats: React.FC = () => {
   const frame = useT();
-  const marker = ramp(frame, 30, 50, easeInOut);
-  const sub = useSpring(40);
-  const cert = useSpring(70, {damping: 11, stiffness: 170, mass: 0.7});
+  const marker = ramp(frame, 28, 44, easeInOut);
+  const sub = useSpring(34);
+  const cert = useSpring(54, {damping: 11, stiffness: 170, mass: 0.7});
   return (
     <AbsoluteFill style={{backgroundColor: S.indigo}}>
       <DottedGrid color={S.white} corner="bl" />
@@ -434,11 +435,11 @@ const SceneFormats: React.FC = () => {
         </div>
       </div>
       <div style={{position: 'absolute', right: 170, top: 320, display: 'flex', flexDirection: 'column', gap: 46}}>
-        <FeatureRow delay={22} caption="avec des formateurs experts">
-          <Toggle left="Individuel" right="En groupe" delay={22} flips={[52, 100]} />
+        <FeatureRow delay={18} caption="avec des formateurs experts">
+          <Toggle left="Individuel" right="En groupe" delay={18} flips={[42, 74]} />
         </FeatureRow>
-        <FeatureRow delay={36} caption="selon vos contraintes">
-          <Toggle left="À distance" right="En présentiel" delay={36} flips={[66, 114]} />
+        <FeatureRow delay={28} caption="selon vos contraintes">
+          <Toggle left="À distance" right="En présentiel" delay={28} flips={[52, 84]} />
         </FeatureRow>
         <div
           style={{
@@ -470,7 +471,7 @@ const SceneFormats: React.FC = () => {
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                {...evolvePath(ramp(frame, 76, 92), 'M4 12.5 L9.5 18 L20 6.5')}
+                {...evolvePath(ramp(frame, 60, 74), 'M4 12.5 L9.5 18 L20 6.5')}
               />
             </svg>
           </div>
@@ -700,7 +701,8 @@ const SceneOutro: React.FC = () => {
 // ---------------------------------------------------------------------------
 
 // Durées en frames maquette, multipliées par K au montage.
-const T0 = {logo: 60, manifesto: 130, domains: 165, formats: 150, stats: 160, funding: 125, outro: 127};
+// Chaque scène raccourcie d'1 s (15 frames maquette) ; « formats » de 2,5 s.
+const T0 = {logo: 45, manifesto: 115, domains: 150, formats: 112, stats: 145, funding: 110, outro: 112};
 const TR0 = [15, 14, 14, 14, 16, 18];
 const T = Object.fromEntries(Object.entries(T0).map(([k, v]) => [k, v * K])) as typeof T0;
 const TR = TR0.map((v) => v * K);

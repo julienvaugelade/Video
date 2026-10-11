@@ -8,6 +8,7 @@ import {
   Easing,
   Img,
   interpolate,
+  interpolateColors,
   spring,
   staticFile,
   useCurrentFrame,
@@ -321,6 +322,171 @@ const SceneDomains: React.FC = () => {
 };
 
 // ---------------------------------------------------------------------------
+// 3 bis. Formations professionnelles : sur mesure, certifiantes
+// ---------------------------------------------------------------------------
+
+/** Interrupteur qui bascule entre deux options : « l'un ou l'autre, au choix ». */
+const Toggle: React.FC<{left: string; right: string; delay: number; flips: number[]}> = ({left, right, delay, flips}) => {
+  const frame = useT();
+  // Position du curseur : 0 = gauche, 1 = droite ; chaque bascule dure 12 frames.
+  const pos = flips.reduce((acc, f, i) => {
+    const r = ramp(frame, f, f + 12, easeInOut);
+    return i % 2 === 0 ? acc + r : acc - r;
+  }, 0);
+  const p = useSpring(delay);
+  const W = 640;
+  const labelStyle = (active: number): React.CSSProperties => ({
+    position: 'relative',
+    width: W / 2,
+    textAlign: 'center',
+    fontFamily: FONT,
+    fontWeight: 600,
+    fontSize: 36,
+    color: interpolateColors(active, [0, 1], [S.lavender, S.indigo]),
+  });
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: W,
+        height: 92,
+        borderRadius: 999,
+        background: 'rgba(255,255,255,0.12)',
+        border: `2px solid rgba(255,255,255,0.25)`,
+        display: 'flex',
+        alignItems: 'center',
+        opacity: p,
+        transform: `translateX(${(1 - p) * 80}px)`,
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: 6 + pos * (W / 2 - 6),
+          top: 6,
+          width: W / 2 - 12,
+          height: 76,
+          borderRadius: 999,
+          background: S.white,
+          boxShadow: `4px 4px 0 ${S.ink}`,
+        }}
+      />
+      <div style={labelStyle(1 - pos)}>{left}</div>
+      <div style={labelStyle(pos)}>{right}</div>
+    </div>
+  );
+};
+
+const FeatureRow: React.FC<{delay: number; caption: string; children: React.ReactNode}> = ({delay, caption, children}) => {
+  const p = useSpring(delay + 6);
+  return (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 14}}>
+      {children}
+      <div style={{fontFamily: MULISH, fontWeight: 600, fontSize: 28, color: S.lavender, opacity: p, paddingLeft: 12}}>{caption}</div>
+    </div>
+  );
+};
+
+const SceneFormats: React.FC = () => {
+  const frame = useT();
+  const marker = ramp(frame, 30, 50, easeInOut);
+  const sub = useSpring(40);
+  const cert = useSpring(70, {damping: 11, stiffness: 170, mass: 0.7});
+  return (
+    <AbsoluteFill style={{backgroundColor: S.indigo}}>
+      <DottedGrid color={S.white} corner="bl" />
+      <div style={{position: 'absolute', left: 170, top: 330, width: 820}}>
+        <Kicker color={S.lavender} delay={2}>Formations professionnelles</Kicker>
+        <div style={{marginTop: 24}}>
+          <Letters text="VOTRE PROJET," delay={6} size={92} color={S.white} stagger={1.5} />
+        </div>
+        <div style={{position: 'relative', marginTop: 12, alignSelf: 'flex-start', display: 'inline-block'}}>
+          <div
+            style={{
+              position: 'absolute',
+              left: -10,
+              right: -10,
+              bottom: 6,
+              height: 38,
+              background: S.yellow,
+              transformOrigin: 'left',
+              transform: `scaleX(${marker}) skewX(-8deg)`,
+            }}
+          />
+          <div style={{position: 'relative'}}>
+            <Letters text="VOS OBJECTIFS." delay={18} size={92} color={S.white} stagger={1.5} />
+          </div>
+        </div>
+        <div
+          style={{
+            marginTop: 40,
+            fontFamily: MULISH,
+            fontWeight: 600,
+            fontSize: 36,
+            lineHeight: 1.45,
+            color: S.white,
+            opacity: sub,
+            transform: `translateY(${(1 - sub) * 20}px)`,
+          }}
+        >
+          Un programme personnalisé,
+          <br />à votre rythme.
+        </div>
+      </div>
+      <div style={{position: 'absolute', right: 170, top: 320, display: 'flex', flexDirection: 'column', gap: 46}}>
+        <FeatureRow delay={22} caption="avec des formateurs experts">
+          <Toggle left="Individuel" right="En groupe" delay={22} flips={[52, 100]} />
+        </FeatureRow>
+        <FeatureRow delay={36} caption="selon vos contraintes">
+          <Toggle left="À distance" right="En présentiel" delay={36} flips={[66, 114]} />
+        </FeatureRow>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 22,
+            opacity: cert,
+            transform: `scale(${0.85 + 0.15 * cert})`,
+            transformOrigin: 'left center',
+          }}
+        >
+          <div
+            style={{
+              width: 92,
+              height: 92,
+              borderRadius: '50%',
+              background: S.yellow,
+              boxShadow: `4px 4px 0 ${S.ink}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg width={48} height={48} viewBox="0 0 24 24">
+              <path
+                d="M4 12.5 L9.5 18 L20 6.5"
+                stroke={S.ink}
+                strokeWidth={3}
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                {...evolvePath(ramp(frame, 76, 92), 'M4 12.5 L9.5 18 L20 6.5')}
+              />
+            </svg>
+          </div>
+          <div>
+            <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 44, color: S.white}}>Certifiantes</div>
+            <div style={{fontFamily: MULISH, fontWeight: 600, fontSize: 28, color: S.lavender, marginTop: 4}}>
+              éligibles CPF, OPCO et France Travail
+            </div>
+          </div>
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------------------
 // 4. Chiffres-preuves : compteurs + anneau de note
 // ---------------------------------------------------------------------------
 
@@ -534,8 +700,8 @@ const SceneOutro: React.FC = () => {
 // ---------------------------------------------------------------------------
 
 // Durées en frames maquette, multipliées par K au montage.
-const T0 = {logo: 60, manifesto: 130, domains: 165, stats: 160, funding: 125, outro: 127};
-const TR0 = [15, 14, 14, 16, 18];
+const T0 = {logo: 60, manifesto: 130, domains: 165, formats: 150, stats: 160, funding: 125, outro: 127};
+const TR0 = [15, 14, 14, 14, 16, 18];
 const T = Object.fromEntries(Object.entries(T0).map(([k, v]) => [k, v * K])) as typeof T0;
 const TR = TR0.map((v) => v * K);
 export const SENZA_FRAMES = Object.values(T).reduce((a, b) => a + b, 0) - TR.reduce((a, b) => a + b, 0);
@@ -554,15 +720,19 @@ export const SenzaShowreel: React.FC = () => (
       <TransitionSeries.Sequence durationInFrames={T.domains}>
         <SceneDomains />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Transition presentation={slide({direction: 'from-right'})} timing={springTiming({durationInFrames: TR[2], config: {damping: 200}})} />
+      <TransitionSeries.Transition presentation={wipe({direction: 'from-right'})} timing={linearTiming({durationInFrames: TR[2], easing: easeInOut})} />
+      <TransitionSeries.Sequence durationInFrames={T.formats}>
+        <SceneFormats />
+      </TransitionSeries.Sequence>
+      <TransitionSeries.Transition presentation={slide({direction: 'from-right'})} timing={springTiming({durationInFrames: TR[3], config: {damping: 200}})} />
       <TransitionSeries.Sequence durationInFrames={T.stats}>
         <SceneStats />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Transition presentation={clockWipe({width: 1920, height: 1080})} timing={linearTiming({durationInFrames: TR[3], easing: easeInOut})} />
+      <TransitionSeries.Transition presentation={clockWipe({width: 1920, height: 1080})} timing={linearTiming({durationInFrames: TR[4], easing: easeInOut})} />
       <TransitionSeries.Sequence durationInFrames={T.funding}>
         <SceneFunding />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: TR[4]})} />
+      <TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: TR[5]})} />
       <TransitionSeries.Sequence durationInFrames={T.outro}>
         <SceneOutro />
       </TransitionSeries.Sequence>

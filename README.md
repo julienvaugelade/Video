@@ -33,7 +33,7 @@ Toute la chronologie est dans `src/AutomationVsAgent.tsx` (temps exprimés en se
 Vidéo 1920×1080, 30 i/s, sans voix off ni personnage : uniquement des formes géométriques et du texte.
 
 - Style schematic : fond blanc `#FFFFFF`, traits fins `#2B3346`, accents jaunes `#F9C623` réservés aux portes, typographie Poppins.
-- Rendu final : [`rendu/garde-fous-agent-ia.mp4`](rendu/garde-fous-agent-ia.mp4)
+- Rendu final : [`rendu/garde-fous-agent-ia.mp4`](rendu/garde-fous-agent-ia.mp4) (muet) et [`rendu/garde-fous-agent-ia-voix.mp4`](rendu/garde-fous-agent-ia-voix.mp4) (avec voix off, texte et calage dans [`rendu/garde-fous-voix-off.md`](rendu/garde-fous-voix-off.md))
 - Source : `src/GardeFousAgent.tsx` (composition `GardeFousAgent`, temps exprimés en secondes).
 
 | Temps | Contenu |

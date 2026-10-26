@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   AbsoluteFill,
+  Audio,
   Easing,
   interpolate,
   interpolateColors,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
@@ -56,7 +58,7 @@ const L_PILL_W = 200;
 const L_RUN_START = 7;
 const L_RUN_PERIOD = 1.5;
 const L_RUN_MOVE = 1.0;
-const L_RUN_LAST = 34.5;
+const L_RUN_LAST = 35.0;
 
 // Right: agent loop
 const CX = 1440;
@@ -103,30 +105,30 @@ type Seg =
   | {t0: number; t1: number; k: 'arc'; n: number}
   | {t0: number; t1: number; k: 'branch'};
 
-const FAIL_AT = 19.9;
-const SUCCESS_AT = 26.0;
+const FAIL_AT = 21.5;
+const SUCCESS_AT = 27.6;
 
 const AGENT: Seg[] = (() => {
   const s: Seg[] = [
-    {t0: 14.0, t1: 14.8, k: 'dwell', n: 0},
-    {t0: 14.8, t1: 15.8, k: 'arc', n: 0},
-    {t0: 15.8, t1: 16.6, k: 'dwell', n: 1},
-    {t0: 16.6, t1: 17.6, k: 'arc', n: 1},
-    {t0: 17.6, t1: 18.4, k: 'dwell', n: 2},
-    {t0: 18.4, t1: 19.4, k: 'arc', n: 2},
-    {t0: 19.4, t1: 21.0, k: 'dwell', n: 3}, // fails
-    {t0: 21.0, t1: 22.0, k: 'branch'},
-    {t0: 22.0, t1: 22.8, k: 'dwell', n: 1},
-    {t0: 22.8, t1: 23.8, k: 'arc', n: 1},
-    {t0: 23.8, t1: 24.6, k: 'dwell', n: 2},
-    {t0: 24.6, t1: 25.6, k: 'arc', n: 2},
-    {t0: 25.6, t1: 26.6, k: 'dwell', n: 3}, // succeeds
-    {t0: 26.6, t1: 27.6, k: 'arc', n: 3},
+    {t0: 15.6, t1: 16.4, k: 'dwell', n: 0},
+    {t0: 16.4, t1: 17.4, k: 'arc', n: 0},
+    {t0: 17.4, t1: 18.2, k: 'dwell', n: 1},
+    {t0: 18.2, t1: 19.2, k: 'arc', n: 1},
+    {t0: 19.2, t1: 20.0, k: 'dwell', n: 2},
+    {t0: 20.0, t1: 21.0, k: 'arc', n: 2},
+    {t0: 21.0, t1: 22.6, k: 'dwell', n: 3}, // fails
+    {t0: 22.6, t1: 23.6, k: 'branch'},
+    {t0: 23.6, t1: 24.4, k: 'dwell', n: 1},
+    {t0: 24.4, t1: 25.4, k: 'arc', n: 1},
+    {t0: 25.4, t1: 26.2, k: 'dwell', n: 2},
+    {t0: 26.2, t1: 27.2, k: 'arc', n: 2},
+    {t0: 27.2, t1: 28.2, k: 'dwell', n: 3}, // succeeds
+    {t0: 28.2, t1: 29.2, k: 'arc', n: 3},
   ];
   // Then it keeps looping, smoothly
-  let t = 27.6;
+  let t = 29.2;
   let n = 0;
-  while (t < 37) {
+  while (t < 38.5) {
     s.push({t0: t, t1: t + 0.5, k: 'dwell', n});
     s.push({t0: t + 0.5, t1: t + 1.3, k: 'arc', n});
     t += 1.3;
@@ -293,10 +295,10 @@ export const AutomationVsAgent: React.FC = () => {
   ];
 
   // ----- Main stage -----
-  const outro = ramp(t, 36, 36.8);
+  const outro = ramp(t, 36.3, 37.0);
   const stageOpacity = 1 - outro;
   const stageScale = 1 - 0.04 * outro;
-  const divider = ramp(t, 3.4, 4.3) * (1 - ramp(t, 36.1, 36.8));
+  const divider = ramp(t, 3.4, 4.3) * (1 - ramp(t, 36.4, 37.0));
 
   // Left run state
   const lMaxRuns = Math.floor((L_RUN_LAST - L_RUN_START) / L_RUN_PERIOD) + 1;
@@ -330,25 +332,26 @@ export const AutomationVsAgent: React.FC = () => {
   // Right agent state
   const agent = agentAt(t);
   const rActive = agent ? agent.active : [0, 0, 0, 0];
-  const failing = t >= FAIL_AT && t < 21.3;
-  const failBadge = pop(FAIL_AT) * (1 - ramp(t, 21.4, 21.8));
-  const okBadge = pop(SUCCESS_AT) * (1 - ramp(t, 27.4, 27.8));
-  const branchDraw = ramp(t, 20.4, 21.0, easeInOut);
-  const branchFade = 1 - 0.55 * ramp(t, 27.0, 28.0);
-  const branchLabel = pop(20.6) * (1 - 0.45 * ramp(t, 27.0, 28.0));
+  const failing = t >= FAIL_AT && t < 22.9;
+  const failBadge = pop(FAIL_AT) * (1 - ramp(t, 23.0, 23.4));
+  const okBadge = pop(SUCCESS_AT) * (1 - ramp(t, 29.0, 29.4));
+  const branchDraw = ramp(t, 22.0, 22.6, easeInOut);
+  const branchFade = 1 - 0.55 * ramp(t, 28.6, 29.6);
+  const branchLabel = pop(22.2) * (1 - 0.45 * ramp(t, 28.6, 29.6));
 
   const rightCaptions: {a: number; b: number; text: React.ReactNode}[] = [
-    {a: 14.0, b: 15.8, text: <><b>Observer</b> : analyser la situation</>},
-    {a: 15.8, b: 17.6, text: <><b>Décider</b> : choisir la meilleure action</>},
-    {a: 17.6, b: 19.4, text: <><b>Agir</b> : passer à l’action</>},
-    {a: 19.4, b: 21.0, text: <><b>Vérifier</b> : le résultat est-il bon ?</>},
-    {a: 21.0, b: 22.8, text: <>Échec → il revient en arrière et ajuste</>},
-    {a: 22.8, b: 25.6, text: <>Nouvelle décision, nouvelle action</>},
-    {a: 25.6, b: 27.7, text: <><b>Vérifier</b> : cette fois, c’est bon</>},
+    {a: 15.6, b: 17.4, text: <><b>Observer</b> : analyser la situation</>},
+    {a: 17.4, b: 19.2, text: <><b>Décider</b> : choisir la meilleure action</>},
+    {a: 19.2, b: 21.0, text: <><b>Agir</b> : passer à l’action</>},
+    {a: 21.0, b: 22.6, text: <><b>Vérifier</b> : le résultat est-il bon ?</>},
+    {a: 22.6, b: 24.4, text: <>Échec → il revient en arrière et ajuste</>},
+    {a: 24.4, b: 27.2, text: <>Nouvelle décision, nouvelle action</>},
+    {a: 27.2, b: 29.3, text: <><b>Vérifier</b> : cette fois, c’est bon</>},
   ];
 
   return (
     <AbsoluteFill style={{background: C.bg, fontFamily: FONT, color: C.ink}}>
+      <Audio src={staticFile('voix-off-calee.mp3')} />
       {/* ================= INTRO ================= */}
       {t < 3.8 && (
         <AbsoluteFill
@@ -522,7 +525,7 @@ export const AutomationVsAgent: React.FC = () => {
 
           {/* Right loop arcs */}
           {ARCS.map((arc, i) => {
-            const p = ramp(t, 12.2 + i * 0.35, 12.75 + i * 0.35, easeInOut);
+            const p = ramp(t, 13.8 + i * 0.35, 14.35 + i * 0.35, easeInOut);
             return (
               <g key={i} opacity={p > 0 ? 1 : 0}>
                 <path
@@ -649,14 +652,14 @@ export const AutomationVsAgent: React.FC = () => {
             gap: 18,
           }}
         >
-          <Chip label="Simple" appear={pop(8.0)} tone="yellow" />
-          <Chip label="Rapide" appear={pop(9.4)} tone="yellow" />
-          <Chip label="Prévisible" appear={pop(10.8)} tone="yellow" />
+          <Chip label="Simple" appear={pop(10.9)} tone="yellow" />
+          <Chip label="Rapide" appear={pop(11.7)} tone="yellow" />
+          <Chip label="Prévisible" appear={pop(12.65)} tone="yellow" />
         </div>
         <Caption
           x={480}
           y={940}
-          opacity={ramp(t, 31.8, 32.4)}
+          opacity={ramp(t, 33.4, 34.0)}
           text={
             <>
               Même entrée, <b>même chemin</b>. À chaque fois.
@@ -675,7 +678,7 @@ export const AutomationVsAgent: React.FC = () => {
               y={pt.y}
               w={R_PILL_W}
               label={n.label}
-              appear={pop(12.0 + i * 0.35)}
+              appear={pop(13.6 + i * 0.35)}
               active={rActive[i]}
               accent={accent}
               activeText={accent === C.yellow ? C.ink : '#FFFFFF'}
@@ -690,7 +693,7 @@ export const AutomationVsAgent: React.FC = () => {
             left: CX,
             top: CY - 118,
             transform: `translate(-50%, -50%) scale(${0.8 + 0.2 * branchLabel})`,
-            opacity: Math.min(1, branchLabel * 1.4) * (t < 20.6 ? 0 : 1),
+            opacity: Math.min(1, branchLabel * 1.4) * (t < 22.2 ? 0 : 1),
             fontSize: 21,
             fontWeight: 600,
             color: C.ink,
@@ -746,9 +749,9 @@ export const AutomationVsAgent: React.FC = () => {
             gap: 18,
           }}
         >
-          <Chip label="S’adapte" appear={pop(28.2)} tone="blue" />
-          <Chip label="Se corrige" appear={pop(29.4)} tone="blue" />
-          <Chip label="Vise un objectif" appear={pop(30.6)} tone="blue" />
+          <Chip label="S’adapte" appear={pop(29.6)} tone="blue" />
+          <Chip label="Se corrige" appear={pop(30.5)} tone="blue" />
+          <Chip label="Vise un objectif" appear={pop(31.6)} tone="blue" />
         </div>
       </AbsoluteFill>
 
@@ -782,7 +785,7 @@ const Word: React.FC<{p: number; children: React.ReactNode; style?: React.CSSPro
 
 const Outro: React.FC<{t: number; pop: (s: number) => number}> = ({t, pop}) => {
   const underline = ramp(t, 38.4, 39.0, easeInOut);
-  const marker = ramp(t, 39.7, 40.4, easeInOut);
+  const marker = ramp(t, 40.0, 40.6, easeInOut);
   const gap = {marginRight: 26};
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>

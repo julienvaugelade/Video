@@ -7,7 +7,8 @@
     "studio": "remotion studio",
     "render": "remotion render AutomationVsAgent out/automatisation-vs-agent.mp4",
     "still": "remotion still AutomationVsAgent out/still.png",
-    "render:garde-fous": "remotion render GardeFousAgent out/garde-fous-agent-ia.mp4"
+    "render:garde-fous": "remotion render GardeFousAgent out/garde-fous-agent-ia.mp4",
+    "render:garde-fous-senza": "remotion render GardeFousAgentSenza out/garde-fous-agent-ia-senza.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",

@@ -46,6 +46,14 @@ Vidéo 1920×1080, 30 i/s, sans voix off ni personnage : uniquement des formes g
 | 34,8–37,4 s | Conclusion « Un agent fiable sait aussi s'arrêter. » et rappel des trois portes |
 | 37,4–40 s | Arrêt sur image |
 
+### Version charte Senza
+
+Même scénario et même minutage, habillé dans la charte Senza (navy `#2B3346`, indigo `#4E4EEA`, jaune `#F9C623`, cartes indigo clair `#EEEEFB` / crème `#FFFBEC`, pastilles arrondies, ombres douces), sur le modèle de la vidéo « Automatisation vs Agent IA ».
+
+- Source : `src/GardeFousAgentSenza.tsx` (composition `GardeFousAgentSenza`)
+- Rendus : [`rendu/garde-fous-agent-ia-senza.mp4`](rendu/garde-fous-agent-ia-senza.mp4) (muet) et [`rendu/garde-fous-agent-ia-senza-voix.mp4`](rendu/garde-fous-agent-ia-senza-voix.mp4) (voix de Clément, même calage)
+
 ```bash
 npm run render:garde-fous
+npm run render:garde-fous-senza
 ```

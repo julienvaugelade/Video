@@ -6,7 +6,11 @@
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render AutomationVsAgent out/automatisation-vs-agent.mp4",
-    "still": "remotion still AutomationVsAgent out/still.png"
+    "still": "remotion still AutomationVsAgent out/still.png",
+    "render:lebreak30": "remotion render LeBreak30s rendu/le-break-30s.mp4",
+    "render:lebreak45": "remotion render LeBreak45s rendu/le-break-45s.mp4",
+    "lebreak:son": "python3 scripts/lebreak_audio.py",
+    "lebreak:carte": "node scripts/lebreak-carte.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",
@@ -17,7 +21,11 @@
     "remotion": "4.0.534"
   },
   "devDependencies": {
+    "@fontsource/anton": "5.3.0",
     "@types/react": "19.2.2",
-    "typescript": "5.9.3"
+    "d3-geo": "3.1.1",
+    "topojson-client": "3.1.0",
+    "typescript": "5.9.3",
+    "world-atlas": "2.0.2"
   }
 }

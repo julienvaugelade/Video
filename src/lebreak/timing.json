@@ -1,0 +1,34 @@
+{
+  "bpm": 120,
+  "fps": 30,
+  "cues": {
+    "intro": {"case": 1, "titre": 2, "accroche": 3, "ville": 4},
+    "promesse": {"l1": 0.5, "l2": 1.5, "puces": [3.5, 4.5, 5.5]},
+    "origines": {"titre": 0.5, "carte": 1, "pays": [3, 4.5, 6, 7.5], "arc": 9.5, "toulouse": 11},
+    "engagements": {"titre": 0.5, "cartes": [1, 2.5, 4]},
+    "plat": {"nom": 0.75, "prix": 2},
+    "desserts": {"bols": [1, 2], "prix": 3.5},
+    "commande": {"titre": 0.5, "cartes": [1.5, 2.5], "horaires": 3.5},
+    "fin": {"logo": 0.5, "infos": [3, 3.5, 4, 4.5], "slogan": 6}
+  },
+  "v30": {
+    "beats": 60,
+    "scenes": [["intro", 0], ["promesse", 8], ["menu", 16], ["commande", 44], ["fin", 50]],
+    "plats": ["yassa", "mafe", "attieke", "vegan"],
+    "beatsParPlat": 7
+  },
+  "v45": {
+    "beats": 90,
+    "scenes": [
+      ["intro", 0],
+      ["origines", 8],
+      ["engagements", 22],
+      ["menu", 30],
+      ["desserts", 60],
+      ["commande", 68],
+      ["fin", 76]
+    ],
+    "plats": ["yassa", "mafe", "attieke", "brochettes", "vegan"],
+    "beatsParPlat": 6
+  }
+}

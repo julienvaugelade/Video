@@ -1,3 +1,5 @@
 node_modules/
 out/
 .DS_Store
+docs/fiche-outils-son/.mulish_static/
+__pycache__/

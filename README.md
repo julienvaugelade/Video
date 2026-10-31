@@ -32,3 +32,19 @@ npm run render   # rendu MP4 dans out/
 ```
 
 Toute la chronologie est dans `src/AutomationVsAgent.tsx` (temps exprimés en secondes).
+
+## Outils son pour Claude Code
+
+Trois outils pour poser le bon son, à la bonne image, au bon niveau. Ordre rapide : chercher sur Openverse, laisser Real SFX placer les effets, utiliser Earshot pour ce qui manque.
+
+| Outil | Rôle | Source |
+|---|---|---|
+| Openverse | Trouver de vrais sons sous licence libre (CC0, domaine public, CC BY), crédits notés dans `CREDITS.md` | API publique `api.openverse.org`, skill [`outils-son/openverse-sfx`](outils-son/openverse-sfx/SKILL.md) |
+| Real SFX | Repérer chaque moment de la vidéo et y poser un vrai son, à l'image près | [Clipwing/skills](https://github.com/Clipwing/skills) (`skills/real-sfx`) |
+| Earshot | Générer dans le code les sons introuvables (banque de 252 sons, kits), écouter et mesurer un mixage | [Leonxlnx/earshot](https://github.com/Leonxlnx/earshot) (paquet Python, serveur MCP, skills `earshot` et `real-sound`) |
+
+```bash
+./scripts/installer-outils-son.sh          # Mac ou Linux ; --leger pour sauter torch et les modèles d'écoute (~1,1 Go)
+```
+
+Puis redémarrer Claude Code. Fiche de présentation pour l'équipe communication : [`docs/fiche-outils-son/Fiche_outils_son_Senza.pdf`](docs/fiche-outils-son/Fiche_outils_son_Senza.pdf) (générée par `python3 docs/fiche-outils-son/generer_fiche.py`, skill `senza-guides-pdf`).

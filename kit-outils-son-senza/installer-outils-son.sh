@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Installe les trois outils son pour Claude Code (Mac ou Linux) :
-#   1. openverse-sfx : skill de recherche Openverse (fourni dans ce dépôt, outils-son/openverse-sfx)
+#   1. openverse-sfx : skill de recherche Openverse (dossier openverse-sfx de ce kit)
 #   2. real-sfx      : skill de Clipwing (github.com/Clipwing/skills)
 #   3. earshot       : paquet Python + serveur MCP + skills earshot et real-sound (github.com/Leonxlnx/earshot)
 #
-# Usage : ./scripts/installer-outils-son.sh [--leger]
+# Usage : bash installer-outils-son.sh [--leger]   (depuis le dossier du kit ou n'importe où)
 #   --leger : n'installe pas torch ni les modèles d'écoute d'Earshot (~1,1 Go). La banque de sons
 #             générés en code (earshot sfx / kit) fonctionne ; describe, match, find, critique non.
 #
@@ -14,7 +14,7 @@ set -euo pipefail
 LEGER=0
 [[ "${1:-}" == "--leger" ]] && LEGER=1
 
-REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+KIT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILLS="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 EARSHOT_DIR="${EARSHOT_DIR:-$HOME/.local/share/earshot}"
 SONS_DIR="${OPENVERSE_SFX_DIR:-$HOME/sons-sfx/openverse}"
@@ -34,7 +34,8 @@ TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 
 say "1/3 Openverse : skill openverse-sfx"
 rm -rf "$SKILLS/openverse-sfx"
-cp -R "$REPO_DIR/outils-son/openverse-sfx" "$SKILLS/openverse-sfx"
+cp -R "$KIT_DIR/openverse-sfx" "$SKILLS/openverse-sfx"
+rm -rf "$SKILLS/openverse-sfx/scripts/__pycache__"
 
 say "2/3 Real SFX : skill real-sfx"
 git clone -q https://github.com/Clipwing/skills.git "$TMP/clipwing"

@@ -39,12 +39,14 @@ Trois outils pour poser le bon son, à la bonne image, au bon niveau. Ordre rapi
 
 | Outil | Rôle | Source |
 |---|---|---|
-| Openverse | Trouver de vrais sons sous licence libre (CC0, domaine public, CC BY), crédits notés dans `CREDITS.md` | API publique `api.openverse.org`, skill [`outils-son/openverse-sfx`](outils-son/openverse-sfx/SKILL.md) |
+| Openverse | Trouver de vrais sons sous licence libre (CC0, domaine public, CC BY), crédits notés dans `CREDITS.md` | API publique `api.openverse.org`, skill [`kit-outils-son-senza/openverse-sfx`](kit-outils-son-senza/openverse-sfx/SKILL.md) |
 | Real SFX | Repérer chaque moment de la vidéo et y poser un vrai son, à l'image près | [Clipwing/skills](https://github.com/Clipwing/skills) (`skills/real-sfx`) |
 | Earshot | Générer dans le code les sons introuvables (banque de 252 sons, kits), écouter et mesurer un mixage | [Leonxlnx/earshot](https://github.com/Leonxlnx/earshot) (paquet Python, serveur MCP, skills `earshot` et `real-sound`) |
 
-```bash
-./scripts/installer-outils-son.sh          # Mac ou Linux ; --leger pour sauter torch et les modèles d'écoute (~1,1 Go)
-```
+Le dossier [`kit-outils-son-senza/`](kit-outils-son-senza/LISEZMOI.md) est le kit autonome à transmettre à l'équipe (aussi en archive `kit-outils-son-senza.zip`) : fiche PDF Senza, 13 prompts Claude à copier-coller, skill `openverse-sfx`, script d'installation, LISEZMOI. Il ne fait référence à aucun dépôt.
 
-Puis redémarrer Claude Code. Fiche de présentation pour l'équipe communication : [`docs/fiche-outils-son/Fiche_outils_son_Senza.pdf`](docs/fiche-outils-son/Fiche_outils_son_Senza.pdf) (générée par `python3 docs/fiche-outils-son/generer_fiche.py`, skill `senza-guides-pdf`).
+```bash
+bash kit-outils-son-senza/installer-outils-son.sh          # Mac ou Linux ; --leger pour sauter torch et les modèles d'écoute (~1,1 Go)
+python3 docs/fiche-outils-son/generer_fiche.py             # régénère la fiche PDF et le fichier de prompts (skill senza-guides-pdf)
+cd kit-outils-son-senza/.. && zip -qr -X kit-outils-son-senza.zip kit-outils-son-senza -x "*/__pycache__/*"
+```

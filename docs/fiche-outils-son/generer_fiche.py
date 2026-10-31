@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Fiche Senza : les trois outils son (Openverse, Real SFX, Earshot) pour l'équipe communication.
 
-Génère Fiche_outils_son_Senza.pdf dans ce dossier, avec le design system Senza (skill senza-guides-pdf).
+Génère, dans le dossier kit-outils-son-senza/ à transmettre à l'équipe :
+  - Fiche_outils_son_Senza.pdf (design system Senza, skill senza-guides-pdf) ;
+  - Prompts_Claude_outils_son.md (les mêmes prompts, à copier-coller).
 Usage : python3 docs/fiche-outils-son/generer_fiche.py
 """
 import glob
@@ -29,7 +31,9 @@ from reportlab.platypus.doctemplate import ActionFlowable
 from senza_theme import (GREY, HAIRLINE, INDIGO, INK, LAVENDER, WHITE, BadgeRow, Callout, ChecklistItem,
                          OffsetTitle, SectionHeading, SenzaGuide, StatRow, hl, track)
 
-OUT = os.path.join(HERE, "Fiche_outils_son_Senza.pdf")
+KIT = os.path.normpath(os.path.join(HERE, "..", "..", "kit-outils-son-senza"))
+OUT = os.path.join(KIT, "Fiche_outils_son_Senza.pdf")
+OUT_PROMPTS = os.path.join(KIT, "Prompts_Claude_outils_son.md")
 
 
 # ------------------------------------------------------------------ typographie française
@@ -280,6 +284,145 @@ def figure(g, flowable, caption=None):
     g.story.append(KeepTogether(pulled + items))
 
 
+# ------------------------------------------------------------------ cartes de prompts
+class PromptCard(Flowable):
+    """Prompt à copier : carte blanche, liseré lavande, étiquette indigo, texte du prompt."""
+
+    def __init__(self, label, text, styles):
+        super().__init__()
+        self.label = label
+        self.p = Paragraph(fr(text), ParagraphStyle(
+            "pc", parent=styles["body"], fontSize=10, leading=15, spaceAfter=0, textColor=INK))
+
+    def wrap(self, availWidth, availHeight):
+        self.w = availWidth
+        self.pad, self.lpad, self.lab_h = 11, 18, 17
+        _, self.ph = self.p.wrap(self.w - self.lpad - self.pad, availHeight)
+        self.height = self.pad + self.lab_h + self.ph + self.pad
+        return self.w, self.height
+
+    def draw(self):
+        c = self.canv
+        c.setFillColor(WHITE)
+        c.setStrokeColor(HAIRLINE)
+        c.setLineWidth(0.8)
+        c.roundRect(0, 0, self.w, self.height, 10, stroke=1, fill=1)
+        c.setFillColor(LAVENDER)
+        c.roundRect(0, 0, 4, self.height, 2, stroke=0, fill=1)
+        c.setFillColor(INDIGO)
+        c.setFont("Poppins-SemiBold", 8.5)
+        c.drawString(self.lpad, self.height - self.pad - 8, track(self.label, " "))
+        self.p.drawOn(c, self.lpad, self.pad)
+
+
+def prompt_cards(g, title, cards):
+    """Un sous-titre et ses cartes : le titre reste attaché à la première carte."""
+    safe_h3(g, title)
+    first = True
+    for label, text in cards:
+        card = PromptCard(label, text, g.styles)
+        if first:
+            group = _pull_pending_kwn_chain(g) + [card]
+            g.story.append(KeepTogether(group))
+            first = False
+        else:
+            g.story.append(card)
+        g.story.append(Spacer(1, 7))
+
+
+# ------------------------------------------------------------------ les prompts (fiche PDF et fichier .md)
+PROMPTS_INSTALL = [
+    ("Installer", [
+        ("Installation complète (Mac)",
+         "J'ai téléchargé le kit outils son Senza dans le dossier [chemin du dossier du kit]. Lance le script "
+         "installer-outils-son.sh de ce dossier pour installer Openverse, Real SFX et Earshot. Si Python 3.10 ou "
+         "plus, FFmpeg ou Git manquent, installe-les d'abord ou explique-moi comment faire. À la fin, vérifie que "
+         "les skills openverse-sfx, real-sfx, earshot et real-sound sont installés et que le serveur MCP earshot "
+         "répond, puis résume en français ce qui a été fait."),
+        ("Installation pas à pas (Windows ou sans le script)",
+         "Installe pour Claude Code les trois outils son de la fiche Senza, en m'expliquant chaque étape en "
+         "français. Vérifie d'abord que Python 3.10 ou plus, FFmpeg et Git sont installés.<br/>"
+         "1. Copie le dossier openverse-sfx du kit [chemin du dossier du kit] dans mon dossier de skills Claude "
+         "Code.<br/>"
+         "2. Clone https://github.com/Clipwing/skills et copie le dossier skills/real-sfx dans mon dossier de "
+         "skills.<br/>"
+         "3. Clone https://github.com/Leonxlnx/earshot, crée son environnement Python, installe-le avec l'option "
+         "mcp, copie ses skills earshot et real-sound dans mon dossier de skills, puis déclare Earshot comme "
+         "serveur MCP de Claude Code."),
+    ]),
+    ("Vérifier et brancher nos sons", [
+        ("Vérifier l'installation",
+         "Vérifie que mes outils son fonctionnent : fais une recherche test de sons de clic sur Openverse, lance "
+         "le contrôle de Real SFX et génère un son test avec Earshot. Dis-moi ce qui fonctionne et ce qui manque."),
+        ("Brancher notre bibliothèque de sons",
+         "Ajoute le dossier [chemin de notre bibliothèque de sons] comme bibliothèque Real SFX et construis son "
+         "index. Dis-moi ensuite combien de sons ont été trouvés et de quels types."),
+    ]),
+]
+
+PROMPTS_USAGE = [
+    ("Trouver", [
+        ("Chercher des sons",
+         "Cherche sur Openverse des sons de [souffle court et aérien] de moins de 2 secondes, en licence CC0 ou "
+         "CC BY. Télécharge les 5 meilleurs dans notre bibliothèque de sons et montre-moi leurs crédits."),
+        ("Choisir le meilleur",
+         "Classe avec Earshot les sons que tu viens de télécharger selon la description « [un souffle court et "
+         "aérien] » et dis-moi lequel garder, en citant ses mesures."),
+    ]),
+    ("Placer", [
+        ("Sonoriser une vidéo",
+         "Fais le sound design de la vidéo [chemin de la vidéo] avec Real SFX. Garde la voix off et la musique, "
+         "pose chaque son à l'image près, puis donne-moi la nouvelle vidéo, la piste d'effets séparée et le "
+         "rapport."),
+        ("Corriger un son",
+         "Le son à [0:12] est trop fort et celui à [0:27] ne colle pas à l'image. Corrige-les, relance la critique "
+         "et montre-moi les nouvelles notes."),
+        ("Valider à l'oreille",
+         "Prépare la page d'écoute comparative pour que je valide les sons depuis mon téléphone, puis tiens "
+         "compte de mes réponses pour la version suivante."),
+    ]),
+    ("Créer", [
+        ("Combler un manque",
+         "Real SFX n'a rien trouvé pour [la validation finale à 0:38]. Crée avec Earshot [une note claire et "
+         "courte], accordée sur la musique, et pose-la à cet instant."),
+        ("Créer notre kit sonore",
+         "Crée avec Earshot un kit de sons au style calme pour nos vidéos de formation (clic, transition, "
+         "notification, validation) et range-le dans le dossier [Kit sonore Senza]."),
+    ]),
+    ("Vérifier et publier", [
+        ("Contrôler un mixage",
+         "Analyse le son de la vidéo [chemin de la vidéo] avec Earshot : volume général, voix couverte ou non, "
+         "sons décalés par rapport aux coupes. Liste les corrections par ordre de priorité."),
+        ("Préparer les crédits",
+         "Rassemble les crédits de tous les sons CC BY utilisés dans cette vidéo, au format prêt à coller dans "
+         "la description YouTube."),
+    ]),
+]
+
+
+def write_prompts_md(path):
+    def plain(t):
+        t = re.sub(r"<br/>", "\n", t)
+        return re.sub(r"<[^>]+>", "", t).replace(" ", " ")
+
+    out = ["# Prompts Claude : outils son Senza", "",
+           "À coller dans Claude Code. Remplacez les passages entre crochets [ ] par vos propres éléments "
+           "(chemin d'un dossier, d'une vidéo, minutage, description du son).", ""]
+    n = 0
+    for part, groups in (("Installer les outils (une seule fois par ordinateur)", PROMPTS_INSTALL),
+                         ("Utiliser les outils au quotidien", PROMPTS_USAGE)):
+        out += [f"## {part}", ""]
+        for gtitle, cards in groups:
+            out += [f"### {gtitle}", ""]
+            for label, text in cards:
+                n += 1
+                body_txt = plain(text)
+                out += [f"**{n}. {label}**", "", "```text", body_txt, "```", ""]
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(out))
+    return n
+
+
 # ================================================================== contenu
 g = FicheInterne(
     OUT,
@@ -291,7 +434,7 @@ g = FicheInterne(
 )
 g.cover_badges = [("Openverse", "lavender"), ("Real SFX", "lavender"), ("Earshot", "lavender"),
                   ("Pilotés par Claude", "lavender")]
-g.cover_stats = [("3", "Outils gratuits"), ("252", "Sons créés en code"), ("78", "Sons d'interface"),
+g.cover_stats = [("3", "Outils gratuits"), ("13", "Prompts à copier"), ("252", "Sons créés en code"),
                  ("0 €", "De licence")]
 use_mulish_static(g)
 for k in ("body", "lead", "bullet"):
@@ -315,7 +458,7 @@ body(f"Trois outils gratuits comblent ce manque. Ensemble, ils permettent à Cla
      "Une règle ne change pas : Claude n'entend rien, c'est votre écoute qui valide le résultat.")
 callout(g, "1. Comprendre le rôle de chacun des trois outils.<br/>"
            "2. Savoir dans quel ordre les utiliser.<br/>"
-           "3. Formuler vos demandes à Claude, sans aucune ligne de commande.<br/>"
+           "3. Les installer et s'en servir grâce à des prompts prêts à copier.<br/>"
            "4. Publier sans risque du côté des licences.",
         variant="green", title="Objectifs de cette fiche", lines=True)
 figure(g, FlowDiagram([
@@ -393,9 +536,9 @@ safe_bullets(g, [
     "Une page d'écoute comparative, sur téléphone, pour trancher d'un geste ; vos refus sont mémorisés.",
     "Les cinq moments à écouter en priorité.",
 ])
-callout(g, "Sur notre vidéo « Automatisation vs Agent IA », Claude repérerait par exemple un souffle à "
-           "l'apparition du titre, un léger pop à chaque étape de la boucle Observer, Décider, Agir, Vérifier, "
-           "un son d'erreur discret au retour en arrière, puis une note claire à la validation. Le tout sous la "
+callout(g, "Sur une capsule de formation en motion design, Claude repérerait par exemple un souffle à "
+           "l'apparition du titre, un léger pop à chaque étape d'un schéma qui se construit, un son d'erreur "
+           "discret quand une flèche revient en arrière, puis une note claire à la validation. Le tout sous la "
            "voix off, qui reste prioritaire.",
         variant="yellow", title="Exemple concret")
 
@@ -427,22 +570,50 @@ callout(g, "Un son créé dans le code ne provient d'aucun enregistrement : pas 
            "jamais la machine.",
         variant="green", title="Pourquoi ça compte")
 
-# ---------------------------------------------------------------- 5. Mode d'emploi
-safe_section(g, "Bien passer commande", eyebrow="Mode d'emploi", new_page=True)
-lead("Vous n'avez aucune commande à taper. Vous parlez à Claude en français, il choisit lui-même l'outil.")
+# ---------------------------------------------------------------- 5. Installer (prompts)
+safe_section(g, "Installer les trois outils", eyebrow="Prompts · Mise en route", new_page=True)
+lead("L'installation se fait une seule fois par ordinateur, dans Claude Code (dans le terminal ou "
+     "l'application de bureau). Pas besoin de taper de commande : un prompt suffit.")
+body("Le kit transmis avec cette fiche contient tout le nécessaire : la fiche, le fichier "
+     "Prompts_Claude_outils_son.md (tous les prompts, à copier-coller), le skill openverse-sfx, le script "
+     "installer-outils-son.sh pour Mac et un fichier LISEZMOI. Dans chaque prompt, remplacez les passages "
+     "entre crochets par vos propres éléments.")
 table(g, [
-    ["Vous voulez", "Demandez à Claude"],
-    ["Trouver un son précis", "« Trouve trois sons de clic de souris courts, en CC0 ou CC BY, et range-les "
-                              "dans la bibliothèque. »"],
-    ["Sonoriser une vidéo terminée", "« Fais le sound design de cette vidéo avec Real SFX, en gardant la "
-                                     "voix off. »"],
-    ["Combler un manque", "« Il manque un son pour la validation finale : crée avec Earshot une cloche "
-                          "douce, en sol. »"],
-    ["Créer une identité sonore", "« Crée avec Earshot un kit de sons calme pour toutes nos vidéos de "
-                                  "formation. »"],
-    ["Vérifier un mixage", "« Analyse le son de cette vidéo avec Earshot : la voix est-elle couverte ? »"],
-    ["Préparer les crédits", "« Donne-moi les crédits sons à mettre dans la description YouTube. »"],
-], widths=[150, 332])
+    ["Outil", "Ce qui s'installe", "Prérequis"],
+    ["Openverse", "Le skill openverse-sfx du kit : recherche, téléchargement et crédits",
+     "Accès internet à api.openverse.org"],
+    ["Real SFX", "Le skill real-sfx, depuis github.com/Clipwing/skills", "Python 3.9 ou plus, FFmpeg, Git"],
+    ["Earshot", "Le paquet Python, son serveur MCP et deux skills, depuis github.com/Leonxlnx/earshot",
+     "Python 3.10 ou plus, FFmpeg, Git, environ 1,1 Go de modèles d'écoute"],
+], widths=[76, 246, 160])
+_n = 0
+for gtitle, cards in PROMPTS_INSTALL:
+    numbered = []
+    for label, text in cards:
+        _n += 1
+        numbered.append((f"Prompt {_n} · {label}", text))
+    prompt_cards(g, gtitle, numbered)
+callout(g, "Redémarrez Claude Code après l'installation : c'est ce qui charge les nouveaux skills et le "
+           "serveur Earshot. Sans redémarrage, Claude ne les voit pas encore.",
+        variant="coral", title="Piège fréquent")
+
+# ---------------------------------------------------------------- 6. Utiliser (prompts)
+g.story.append(Spacer(1, 14))
+safe_section(g, "Les prompts du quotidien", eyebrow="Prompts · Mode d'emploi")
+lead("Vous parlez à Claude en français, il choisit lui-même l'outil. Ces prompts suivent l'ordre rapide : "
+     "trouver, placer, créer, puis vérifier avant de publier.")
+for gtitle, cards in PROMPTS_USAGE:
+    numbered = []
+    for label, text in cards:
+        _n += 1
+        numbered.append((f"Prompt {_n} · {label}", text))
+    prompt_cards(g, gtitle, numbered)
+
+# ---------------------------------------------------------------- 7. Avant de publier
+g.story.append(Spacer(1, 14))
+safe_section(g, "Avant de publier", eyebrow="Contrôle final")
+lead("Les outils mesurent, vous décidez. Ce dernier contrôle prend quelques minutes et évite les mauvaises "
+     "surprises après la mise en ligne.")
 safe_checklist(g, [
     "Aucun son sous licence NC, ND ou BY-SA dans la vidéo.",
     "Les crédits des sons CC BY sont recopiés dans la description ou le générique.",
@@ -450,26 +621,7 @@ safe_checklist(g, [
     "Vous avez écouté au casque, puis sur le haut-parleur d'un téléphone.",
     "Les cinq moments à écouter signalés dans le rapport ont été vérifiés.",
     "Le volume général est homogène avec celui de nos autres vidéos.",
-], title="Avant de publier")
-callout(g, "Prenez la prochaine vidéo de la chaîne et demandez à Claude d'en faire le sound design avec ces trois "
-           "outils. Comparez l'avant et l'après : la différence s'entend dès la première écoute.",
-        variant="ink", title="À vous")
-
-# ---------------------------------------------------------------- 6. Installation et limites
-safe_section(g, "Installer les trois outils", eyebrow="Pour la personne qui installe", new_page=True)
-body("L'installation se fait une seule fois par ordinateur, dans Claude Code. Le script "
-     "scripts/installer-outils-son.sh du dépôt Video enchaîne toutes les étapes sur Mac ou Linux ; sous "
-     "Windows, on suit les mêmes étapes à la main, dans le dossier %USERPROFILE%\\.claude\\skills.")
-table(g, [
-    ["Outil", "Installation", "Prérequis"],
-    ["Openverse", "Rien à installer. Le skill openverse-sfx, fourni dans le dépôt Video, ajoute la recherche, "
-                  "le téléchargement et les crédits.", "Accès internet à api.openverse.org"],
-    ["Real SFX", "Cloner github.com/Clipwing/skills, copier skills/real-sfx dans ~/.claude/skills, puis "
-                 "redémarrer Claude Code.", "Python 3.9 ou plus, FFmpeg"],
-    ["Earshot", "Cloner github.com/Leonxlnx/earshot, créer son environnement Python, puis le déclarer à "
-                "Claude Code comme serveur MCP.", "Python 3.10 ou plus, FFmpeg, environ 1,1 Go pour les "
-                                                    "modèles d'écoute"],
-], widths=[76, 256, 150])
+], title="La liste à cocher")
 safe_h3(g, "Ce que ces outils ne font pas")
 safe_bullets(g, [
     "Ils ne remplacent pas l'oreille : Claude lit des chiffres, des images et des mots, il n'entend rien.",
@@ -477,6 +629,14 @@ safe_bullets(g, [
     "Real SFX ne crée aucun son : sans bibliothèque bien fournie, certains moments restent muets.",
     "Earshot ne juge ni le goût, ni l'émotion, ni la provenance d'un fichier.",
 ])
+callout(g, "Prenez la prochaine vidéo de la chaîne et demandez à Claude d'en faire le sound design avec ces trois "
+           "outils, en partant du prompt 7. Comparez l'avant et l'après : la différence s'entend dès la première "
+           "écoute.",
+        variant="ink", title="À vous")
 
+os.makedirs(KIT, exist_ok=True)
 g.build()
+n_md = write_prompts_md(OUT_PROMPTS)
+assert n_md == _n, (n_md, _n)
 print(OUT)
+print(OUT_PROMPTS, f"({n_md} prompts)")
